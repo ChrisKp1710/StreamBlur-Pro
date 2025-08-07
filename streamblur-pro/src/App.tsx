@@ -123,10 +123,13 @@ function App() {
                 </div>
               </div>
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/30">
                 <div className="text-center">
-                  <EyeOff className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Preview Disabled</p>
+                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-800/50 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <EyeOff className="w-8 h-8 text-blue-500 dark:text-blue-400" />
+                  </div>
+                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Preview Disabled</p>
+                  <p className="text-xs text-blue-500 dark:text-blue-400 mt-1">Click "Show" to enable camera preview</p>
                 </div>
               </div>
             )}
@@ -134,10 +137,10 @@ function App() {
         </div>
 
         {/* Control Panel - 1 colonna */}
-        <div className="space-y-4">
+        <div className="flex flex-col h-full">
           
           {/* Main Control */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
             <button
               onClick={handleStart}
               className={`w-full py-3 px-4 rounded-lg font-semibold transition-all ${
@@ -169,7 +172,7 @@ function App() {
           </div>
 
           {/* Performance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
             <div className="flex items-center mb-3">
               <Activity className="w-4 h-4 text-blue-500 mr-2" />
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Performance</h3>
@@ -197,7 +200,7 @@ function App() {
           </div>
 
           {/* Blur Control */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
             <div className="flex items-center mb-3">
               <Zap className="w-4 h-4 text-yellow-500 mr-2" />
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Blur Intensity</h3>
@@ -225,35 +228,37 @@ function App() {
             </div>
           </div>
 
-          {/* AI Settings */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center mb-3">
-              <Settings className="w-4 h-4 text-gray-500 mr-2" />
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">AI Settings</h3>
-            </div>
-            
-            <div className="space-y-3">
-              {[
-                { state: edgeSmoothing, setter: setEdgeSmoothing, label: "Edge Smoothing" },
-                { state: temporalSmoothing, setter: setTemporalSmoothing, label: "Temporal Smoothing" },
-                { state: performanceMode, setter: setPerformanceMode, label: "Performance Mode" }
-              ].map((setting, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-xs text-gray-900 dark:text-white">{setting.label}</span>
-                  <button
-                    onClick={() => setting.setter(!setting.state)}
-                    className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors ${
-                      setting.state ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                        setting.state ? 'translate-x-4' : 'translate-x-0.5'
+          {/* AI Settings - Allineato con la base della camera */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 flex-1 flex flex-col justify-end">
+            <div>
+              <div className="flex items-center mb-3">
+                <Settings className="w-4 h-4 text-gray-500 mr-2" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">AI Settings</h3>
+              </div>
+              
+              <div className="space-y-3">
+                {[
+                  { state: edgeSmoothing, setter: setEdgeSmoothing, label: "Edge Smoothing" },
+                  { state: temporalSmoothing, setter: setTemporalSmoothing, label: "Temporal Smoothing" },
+                  { state: performanceMode, setter: setPerformanceMode, label: "Performance Mode" }
+                ].map((setting, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <span className="text-xs text-gray-900 dark:text-white">{setting.label}</span>
+                    <button
+                      onClick={() => setting.setter(!setting.state)}
+                      className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors ${
+                        setting.state ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
                       }`}
-                    />
-                  </button>
-                </div>
-              ))}
+                    >
+                      <span
+                        className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                          setting.state ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
