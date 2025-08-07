@@ -65,12 +65,10 @@
       {
         "fullscreen": false,
         "height": 700,
-        "resizable": true,
+        "resizable": false,
         "title": "StreamBlur Pro",
         "width": 1000,
         "center": true,
-        "minHeight": 600,
-        "minWidth": 800,
         "decorations": true,
         "transparent": false,
         "alwaysOnTop": false

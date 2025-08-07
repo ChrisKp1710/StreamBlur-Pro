@@ -7,16 +7,22 @@
   html {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     scroll-behavior: smooth;
+    overflow: hidden;
   }
   
   body {
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
   }
   
   #root {
-    @apply min-h-screen;
+    @apply w-full h-full overflow-hidden;
   }
 }
 
