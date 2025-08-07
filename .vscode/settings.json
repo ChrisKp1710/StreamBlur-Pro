@@ -1,0 +1,15 @@
+{
+    "python.defaultInterpreterPath": "./StreamBlur-Python-Core/streamblur_env/Scripts/python.exe",
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.extraPaths": [
+        "./StreamBlur-Python-Core/src"
+    ],
+    "pylance.include": [
+        "./StreamBlur-Python-Core/src/**"
+    ],
+    "python.analysis.include": [
+        "./StreamBlur-Python-Core/src/**"
+    ]
+}

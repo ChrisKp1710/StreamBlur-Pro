@@ -27,7 +27,7 @@ StreamBlur-Python-Core/src/gui/__pycache__/
 *.pyd
 .Python
 
-# Development and Test Files
+# File di sviluppo non necessari
 StreamBlur-Python-Core/test_*.py
 StreamBlur-Python-Core/real_*.py
 StreamBlur-Python-Core/integrated_*.py
