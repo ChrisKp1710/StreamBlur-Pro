@@ -7,6 +7,21 @@ pnpm-debug.log*
 lerna-debug.log*
 package-lock.json
 
+# Python Backend Core - Escludi tutto tranne src/
+../StreamBlur-Python-Core/streamblur_env/
+../StreamBlur-Python-Core/__pycache__/
+../StreamBlur-Python-Core/src/__pycache__/
+../StreamBlur-Python-Core/src/*/__pycache__/
+../StreamBlur-Python-Core/*.pyc
+../StreamBlur-Python-Core/*/*.pyc
+../StreamBlur-Python-Core/*/*/*.pyc
+../StreamBlur-Python-Core/test_*.py
+../StreamBlur-Python-Core/real_*.py
+../StreamBlur-Python-Core/integrated_*.py
+../StreamBlur-Python-Core/simple_*.py
+../StreamBlur-Python-Core/launcher.py
+../StreamBlur-Python-Core/tauri_backend.py
+
 # Build outputs
 dist/
 dist-ssr/

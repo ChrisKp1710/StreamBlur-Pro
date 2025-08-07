@@ -1,0 +1,96 @@
+# ==========================================
+# StreamBlur Pro - Git Ignore Configuration
+# ==========================================
+
+# === TAURI PROJECT ===
+streamblur-pro/node_modules/
+streamblur-pro/dist/
+streamblur-pro/dist-ssr/
+streamblur-pro/src-tauri/target/
+streamblur-pro/package-lock.json
+
+# === PYTHON BACKEND ===
+# Virtual Environment
+StreamBlur-Python-Core/streamblur_env/
+StreamBlur-Python-Core/venv/
+StreamBlur-Python-Core/.env
+
+# Python Cache
+StreamBlur-Python-Core/__pycache__/
+StreamBlur-Python-Core/src/__pycache__/
+StreamBlur-Python-Core/src/core/__pycache__/
+StreamBlur-Python-Core/src/utils/__pycache__/
+StreamBlur-Python-Core/src/gui/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Development and Test Files
+StreamBlur-Python-Core/test_*.py
+StreamBlur-Python-Core/real_*.py
+StreamBlur-Python-Core/integrated_*.py
+StreamBlur-Python-Core/simple_*.py
+StreamBlur-Python-Core/launcher.py
+StreamBlur-Python-Core/tauri_backend.py
+
+# === SYSTEM FILES ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.tmp
+*.temp
+
+# === EDITOR FILES ===
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# === LOGS ===
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === BUILD ARTIFACTS ===
+dist/
+build/
+target/
+*.exe
+*.msi
+*.dmg
+*.app
+*.deb
+*.rpm
+
+# === DEVELOPMENT FILES ===
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === DEPENDENCIES ===
+node_modules/
+vendor/
+
+# Keep important files
+!StreamBlur-Python-Core/src/
+!StreamBlur-Python-Core/requirements.txt
+!StreamBlur-Python-Core/setup.py
+!StreamBlur-Python-Core/README.md
+!StreamBlur-Python-Core/LICENSE
+!streamblur-pro/src/
+!streamblur-pro/src-tauri/src/
+!streamblur-pro/package.json
+!streamblur-pro/README.md
