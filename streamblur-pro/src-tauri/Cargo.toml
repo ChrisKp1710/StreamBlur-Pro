@@ -7,7 +7,7 @@ license = "MIT"
 repository = ""
 edition = "2021"
 
-# Usa Tauri v1 invece di v2
+# Usa Tauri v1 (stabile)
 [build-dependencies]
 tauri-build = { version = "1.5", features = [] }
 
@@ -21,3 +21,7 @@ reqwest = { version = "0.11", features = ["json"] }
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
+
+[[bin]]
+name = "streamblur-pro"
+path = "src/main.rs"
