@@ -11,7 +11,7 @@ function App() {
   // States
   const [isActive, setIsActive] = useState(false);
   const [blurIntensity, setBlurIntensity] = useState(15);
-  const [previewEnabled, setPreviewEnabled] = useState(true);
+  const [previewEnabled, setPreviewEnabled] = useState(false);
   const [fps, setFps] = useState(26.2);
   
   // Settings
