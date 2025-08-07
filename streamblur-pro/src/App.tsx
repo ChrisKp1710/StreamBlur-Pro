@@ -13,8 +13,8 @@ function App() {
   // States
   const [isActive, setIsActive] = useState(false);
   const [blurIntensity, setBlurIntensity] = useState(15);
-  const [previewEnabled, setPreviewEnabled] = useState(false);
-  const [fps, setFps] = useState(0);
+  const [previewEnabled, setPreviewEnabled] = useState(true);
+  const [fps, setFps] = useState(26.2);
   
   // Settings
   const [edgeSmoothing, setEdgeSmoothing] = useState(true);
@@ -42,111 +42,105 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                <Monitor className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  StreamBlur Pro
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">AI Background Blur</p>
-              </div>
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+      {/* Header - Compatto */}
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-blue-500 rounded-md flex items-center justify-center">
+              <Monitor className="w-3.5 h-3.5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-base font-semibold text-gray-900 dark:text-white">
+                StreamBlur Pro
+              </h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">AI Background Blur</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <div className={`flex items-center space-x-1.5 px-2 py-1 rounded-full text-xs ${
+              isActive ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-100 dark:bg-gray-800'
+            }`}>
+              <div className={`w-1.5 h-1.5 rounded-full ${
+                isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+              }`}></div>
+              <span className="font-medium text-gray-700 dark:text-gray-300">
+                {isActive ? 'Active' : 'Ready'}
+              </span>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${
-                isActive ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-100 dark:bg-gray-800'
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                  isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
-                }`}></div>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {isActive ? 'Active' : 'Ready'}
-                </span>
+            {isActive && (
+              <div className="text-xs font-mono text-gray-600 dark:text-gray-400">
+                {fps.toFixed(1)} FPS
               </div>
-              
-              {isActive && (
-                <div className="text-sm font-mono text-gray-600 dark:text-gray-400">
-                  {fps.toFixed(1)} FPS
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
-        
-        {/* Camera Preview */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Camera Preview</h2>
+      {/* Main Content - Una singola vista compatta */}
+      <div className="flex-1 p-4 min-h-0">
+        <div className="h-full max-w-5xl mx-auto grid grid-cols-4 gap-4">
+          
+          {/* Camera Preview - Colonna 1-2 */}
+          <div className="col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col">
+            <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Camera Preview</h2>
               <button
                 onClick={() => setPreviewEnabled(!previewEnabled)}
-                className={`flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center px-2 py-1 rounded text-xs font-medium transition-colors ${
                   previewEnabled
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                 }`}
               >
-                {previewEnabled ? <Eye className="w-4 h-4 mr-1" /> : <EyeOff className="w-4 h-4 mr-1" />}
-                {previewEnabled ? 'Hide Preview' : 'Show Preview'}
+                {previewEnabled ? <Eye className="w-3 h-3 mr-1" /> : <EyeOff className="w-3 h-3 mr-1" />}
+                {previewEnabled ? 'Hide' : 'Show'}
               </button>
             </div>
-          </div>
-          
-          {previewEnabled ? (
-            <div className="aspect-video bg-gray-100 dark:bg-gray-700 relative">
-              {/* Simulated camera preview */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                <div className="text-center">
-                  <Monitor className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
-                  <p className="text-gray-600 dark:text-gray-400 font-medium">Camera Preview</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                    Blur Intensity: {blurIntensity}%
-                  </p>
-                </div>
-              </div>
-              
-              {/* Blur intensity visual indicator */}
-              <div className="absolute top-4 right-4">
-                <div className={`px-2 py-1 rounded text-xs font-medium ${
-                  blurIntensity < 10 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                  blurIntensity < 20 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                }`}>
-                  {blurIntensity < 10 ? 'Subtle' : blurIntensity < 20 ? 'Moderate' : 'Intense'} Blur
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="aspect-video bg-gray-50 dark:bg-gray-800 flex items-center justify-center border-t border-gray-200 dark:border-gray-700">
-              <div className="text-center">
-                <EyeOff className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 dark:text-gray-400">Preview disabled</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Main Controls */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Controls */}
-          <div className="lg:col-span-2 space-y-6">
             
-            {/* Start/Stop */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex-1 relative">
+              {previewEnabled ? (
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                  <div className="text-center">
+                    <Monitor className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                    <p className="text-gray-600 dark:text-gray-400 font-medium text-sm">Camera Preview</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                      Blur: {blurIntensity}%
+                    </p>
+                  </div>
+                  
+                  {/* Blur indicator */}
+                  <div className="absolute top-2 right-2">
+                    <div className={`px-1.5 py-0.5 rounded text-xs font-medium ${
+                      blurIntensity < 10 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                      blurIntensity < 20 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                    }`}>
+                      {blurIntensity < 10 ? 'Subtle' : blurIntensity < 20 ? 'Moderate' : 'Intense'}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="absolute inset-0 bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
+                  <div className="text-center">
+                    <EyeOff className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Preview disabled</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Controls - Colonna 3-4 */}
+          <div className="col-span-2 space-y-4">
+            
+            {/* Start/Stop Button */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
               <button
                 onClick={handleStart}
-                className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all ${
+                className={`w-full py-3 px-4 rounded-lg font-semibold transition-all ${
                   isActive 
                     ? 'bg-red-500 hover:bg-red-600 text-white' 
                     : 'bg-blue-500 hover:bg-blue-600 text-white'
@@ -156,30 +150,28 @@ function App() {
               >
                 {isActive ? (
                   <>
-                    <Square className="inline w-5 h-5 mr-2" />
+                    <Square className="inline w-4 h-4 mr-2" />
                     Stop StreamBlur Pro
                   </>
                 ) : (
                   <>
-                    <Play className="inline w-5 h-5 mr-2" />
+                    <Play className="inline w-4 h-4 mr-2" />
                     Start StreamBlur Pro
                   </>
                 )}
               </button>
               
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="text-sm text-blue-800 dark:text-blue-200">
-                  {isActive 
-                    ? "✓ Virtual camera active as 'OBS Virtual Camera'"
-                    : "Select 'OBS Virtual Camera' in Discord, Teams, or OBS after starting"
-                  }
-                </p>
+              <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded text-xs text-blue-800 dark:text-blue-200">
+                {isActive 
+                  ? "✓ Virtual camera active as 'OBS Virtual Camera'"
+                  : "Select 'OBS Virtual Camera' in Discord, Teams, or OBS"
+                }
               </div>
             </div>
 
             {/* Blur Control */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Blur Intensity: {blurIntensity}
               </label>
               
@@ -189,76 +181,77 @@ function App() {
                 max="25"
                 value={blurIntensity}
                 onChange={(e) => setBlurIntensity(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded appearance-none cursor-pointer"
               />
               
-              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                 <span>Subtle</span>
-                <span>Moderate</span>
                 <span>Intense</span>
               </div>
             </div>
-          </div>
 
-          {/* Settings */}
-          <div className="space-y-6">
-            
-            {/* AI Settings */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">AI Enhancement</h3>
+            {/* Settings & Performance - Side by side */}
+            <div className="grid grid-cols-2 gap-4">
               
-              <div className="space-y-4">
-                {[
-                  { state: edgeSmoothing, setter: setEdgeSmoothing, label: "Edge Smoothing", desc: "Softer edges" },
-                  { state: temporalSmoothing, setter: setTemporalSmoothing, label: "Temporal Smoothing", desc: "Stable movement" },
-                  { state: performanceMode, setter: setPerformanceMode, label: "Performance Mode", desc: "Faster processing" }
-                ].map((setting, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{setting.label}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{setting.desc}</p>
-                    </div>
-                    <button
-                      onClick={() => setting.setter(!setting.state)}
-                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        setting.state ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                          setting.state ? 'translate-x-5' : 'translate-x-1'
+              {/* AI Settings */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">AI Enhancement</h3>
+                
+                <div className="space-y-2">
+                  {[
+                    { state: edgeSmoothing, setter: setEdgeSmoothing, label: "Edge Smoothing" },
+                    { state: temporalSmoothing, setter: setTemporalSmoothing, label: "Temporal Smoothing" },
+                    { state: performanceMode, setter: setPerformanceMode, label: "Performance Mode" }
+                  ].map((setting, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="text-xs text-gray-900 dark:text-white">{setting.label}</span>
+                      <button
+                        onClick={() => setting.setter(!setting.state)}
+                        className={`relative inline-flex h-3 w-6 items-center rounded-full transition-colors ${
+                          setting.state ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
                         }`}
-                      />
-                    </button>
-                  </div>
-                ))}
+                      >
+                        <span
+                          className={`inline-block h-2 w-2 transform rounded-full bg-white transition-transform ${
+                            setting.state ? 'translate-x-3.5' : 'translate-x-0.5'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Performance */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center mb-3">
-                <Activity className="w-4 h-4 text-gray-400 mr-2" />
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Performance</h3>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">FPS</span>
-                  <span className="text-sm font-mono text-gray-900 dark:text-white">
-                    {fps.toFixed(1)}
-                  </span>
+              {/* Performance */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <div className="flex items-center mb-2">
+                  <Activity className="w-3 h-3 text-gray-400 mr-1" />
+                  <h3 className="text-xs font-medium text-gray-700 dark:text-gray-300">Performance</h3>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
-                  <span className={`text-sm font-medium ${
-                    fps >= 25 ? 'text-green-600 dark:text-green-400' : 
-                    fps >= 20 ? 'text-yellow-600 dark:text-yellow-400' : 
-                    'text-red-600 dark:text-red-400'
-                  }`}>
-                    {fps >= 25 ? 'Excellent' : fps >= 20 ? 'Good' : fps > 0 ? 'Fair' : 'Ready'}
-                  </span>
+                <div className="space-y-1.5">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600 dark:text-gray-400">FPS</span>
+                    <span className="text-xs font-mono text-gray-900 dark:text-white">
+                      {fps.toFixed(1)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600 dark:text-gray-400">Status</span>
+                    <span className={`text-xs font-medium ${
+                      fps >= 25 ? 'text-green-600 dark:text-green-400' : 
+                      fps >= 20 ? 'text-yellow-600 dark:text-yellow-400' : 
+                      'text-red-600 dark:text-red-400'
+                    }`}>
+                      {fps >= 25 ? 'Excellent' : fps >= 20 ? 'Good' : fps > 0 ? 'Fair' : 'Ready'}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600 dark:text-gray-400">CPU</span>
+                    <span className="text-xs font-mono text-gray-900 dark:text-white">23.5%</span>
+                  </div>
                 </div>
               </div>
             </div>
