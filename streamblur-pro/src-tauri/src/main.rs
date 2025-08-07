@@ -42,11 +42,11 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn start_streamblur_engine(state: State<'_, AppState>) -> Result<String, String> {
-    // Configura path per il nuovo server Python
+    // Configura path per StreamBlur Pro Advanced
     let python_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_env\Scripts\python.exe";
-    let script_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_server.py";
+    let script_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_pro_advanced.py";
     
-    println!("🚀 Avviando StreamBlur Engine integrato...");
+    println!("🚀 Avviando StreamBlur Pro Advanced...");
     
     match Command::new(python_path)
         .arg(script_path)

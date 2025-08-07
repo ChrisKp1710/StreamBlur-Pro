@@ -16,6 +16,8 @@ import time
 import logging
 import cv2
 import numpy as np
+import mediapipe as mp
+import pyvirtualcam
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO)
@@ -31,12 +33,13 @@ class AISettings(BaseModel):
     smoothing: float
 
 class StreamBlurEngine:
-    """Motore principale StreamBlur Pro"""
+    """Motore principale StreamBlur Pro con AI Segmentation"""
     
     def __init__(self):
         self.is_running = False
         self.virtual_camera = None
         self.webcam = None
+        self.selfie_segmentation = None
         
         # Stato del sistema
         self.status_info = {
@@ -48,51 +51,49 @@ class StreamBlurEngine:
             "virtual_camera_active": False
         }
         
-    def start(self):
-        """Avvia il motore StreamBlur"""
+    def start_camera(self):
+        """Avvia la webcam e MediaPipe"""
         if self.is_running:
-            return {"success": True, "message": "Motore già attivo"}
-            
+            logger.info("StreamBlur Pro è già in esecuzione")
+            return {"status": "already_running"}
+        
         try:
-            import pyvirtualcam
-            
-            logger.info("🚀 Inizializzazione StreamBlur Pro...")
-            
             # Inizializza webcam
             self.webcam = cv2.VideoCapture(0)
             if not self.webcam.isOpened():
                 raise Exception("Impossibile aprire la webcam")
             
-            # Configura webcam
+            # Configura webcam per performance ottimali
             self.webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
             self.webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
             self.webcam.set(cv2.CAP_PROP_FPS, 30)
             
-            logger.info("📷 Webcam inizializzata")
+            # Inizializza MediaPipe per segmentazione AI
+            mp_selfie_segmentation = mp.solutions.selfie_segmentation
+            self.selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(
+                model_selection=1 if self.status_info["current_ai_quality"] == "high" else 0
+            )
             
-            # Crea virtual camera
+            # Inizializza virtual camera
             self.virtual_camera = pyvirtualcam.Camera(
                 width=1280, 
                 height=720, 
-                fps=30,
-                fmt=pyvirtualcam.PixelFormat.BGR
+                fps=30, 
+                fmt=pyvirtualcam.PixelFormat.RGB
             )
-            
-            logger.info(f"🎥 Virtual Camera creata: {self.virtual_camera.device}")
-            
-            # Avvia processing loop
-            self._start_processing_loop()
             
             self.is_running = True
             self.status_info["is_running"] = True
             self.status_info["virtual_camera_active"] = True
+            self.status_info["frames_processed"] = 0
             
-            logger.info("✅ StreamBlur Pro ATTIVO!")
-            return {"success": True, "message": "StreamBlur avviato con successo"}
+            logger.info("StreamBlur Pro avviato con successo con AI Segmentation")
+            return {"status": "success", "message": "StreamBlur Pro avviato con AI Segmentation"}
             
         except Exception as e:
-            logger.error(f"❌ Errore avvio: {e}")
-            return {"success": False, "message": f"Errore: {str(e)}"}
+            logger.error(f"Errore nell'avvio di StreamBlur Pro: {e}")
+            self.cleanup()
+            return {"status": "error", "error": str(e)}
     
     def stop(self):
         """Ferma il motore StreamBlur"""
@@ -165,32 +166,55 @@ class StreamBlurEngine:
         processing_thread.start()
     
     def _apply_blur_effect(self, frame):
-        """Applica effetto blur al frame"""
-        blur_strength = int(self.status_info["current_blur"])
+        """Applica effetto blur SOLO allo sfondo usando AI segmentation"""
+        if self.status_info["current_blur"] <= 0:
+            return frame
         
-        if blur_strength > 0:
-            # Calcola kernel size (deve essere dispari)
-            kernel_size = max(1, blur_strength * 4 + 1)
-            if kernel_size % 2 == 0:
-                kernel_size += 1
+        try:
+            # Converti frame per MediaPipe (RGB)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
-            # Applica blur gaussiano
-            blurred_frame = cv2.GaussianBlur(frame, (kernel_size, kernel_size), 0)
+            # Ottieni la maschera di segmentazione della persona
+            results = self.selfie_segmentation.process(rgb_frame)
             
-            # Aggiungi overlay
-            cv2.putText(blurred_frame, f"StreamBlur Pro - BLUR: {blur_strength}", 
-                       (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(blurred_frame, f"Frame: {self.status_info['frames_processed']}", 
-                       (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            # La maschera: 1.0 = persona, 0.0 = sfondo
+            segmentation_mask = results.segmentation_mask
             
-            return blurred_frame
-        else:
-            # Nessun blur
-            cv2.putText(frame, f"StreamBlur Pro - NO BLUR", 
-                       (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            cv2.putText(frame, f"Frame: {self.status_info['frames_processed']}", 
-                       (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            # Crea una maschera binaria per la persona (soglia 0.5)
+            person_mask = (segmentation_mask > 0.5).astype('uint8') * 255
             
+            # Inverti la maschera per ottenere solo lo sfondo
+            background_mask = cv2.bitwise_not(person_mask)
+            
+            # Applica blur intenso al frame originale
+            blur_intensity = int(self.status_info["current_blur"] * 2)
+            if blur_intensity % 2 == 0:
+                blur_intensity += 1  # Deve essere dispari
+            
+            blurred_frame = cv2.GaussianBlur(frame, (blur_intensity, blur_intensity), 0)
+            
+            # Converti le maschere in 3 canali per la fusione
+            person_mask_3ch = cv2.cvtColor(person_mask, cv2.COLOR_GRAY2BGR)
+            background_mask_3ch = cv2.cvtColor(background_mask, cv2.COLOR_GRAY2BGR)
+            
+            # Normalizza le maschere (0-1)
+            person_mask_3ch = person_mask_3ch.astype('float32') / 255.0
+            background_mask_3ch = background_mask_3ch.astype('float32') / 255.0
+            
+            # Combina: persona originale + sfondo sfocato
+            result = (frame.astype('float32') * person_mask_3ch + 
+                     blurred_frame.astype('float32') * background_mask_3ch)
+            
+            return result.astype('uint8')
+            
+        except Exception as e:
+            logger.error(f"Errore nell'applicazione del blur AI: {e}")
+            # Fallback al blur tradizionale se AI fallisce
+            blur_intensity = int(self.status_info["current_blur"] * 2)
+            if blur_intensity > 0:
+                if blur_intensity % 2 == 0:
+                    blur_intensity += 1
+                return cv2.GaussianBlur(frame, (blur_intensity, blur_intensity), 0)
             return frame
     
     def update_blur(self, strength: float, mode: str):
@@ -200,14 +224,56 @@ class StreamBlurEngine:
         return {"success": True, "blur_strength": strength, "blur_mode": mode}
     
     def update_ai(self, quality: str, smoothing: float):
-        """Aggiorna impostazioni AI"""
+        """Aggiorna impostazioni AI e reinizializza MediaPipe se necessario"""
+        old_quality = self.status_info["current_ai_quality"]
         self.status_info["current_ai_quality"] = quality
+        
+        # Se cambia la qualità e MediaPipe è attivo, reinizializza
+        if (old_quality != quality and 
+            self.selfie_segmentation is not None and 
+            self.is_running):
+            try:
+                # Chiudi l'istanza corrente
+                self.selfie_segmentation.close()
+                
+                # Crea nuova istanza con la qualità aggiornata
+                mp_selfie_segmentation = mp.solutions.selfie_segmentation
+                self.selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(
+                    model_selection=1 if quality == "high" else 0
+                )
+                logger.info(f"🤖 MediaPipe reinizializzato con qualità: {quality}")
+            except Exception as e:
+                logger.error(f"Errore nel reinizializzare MediaPipe: {e}")
+        
         logger.info(f"🤖 AI aggiornato: {quality}, smoothing: {smoothing}")
         return {"success": True, "ai_quality": quality, "ai_smoothing": smoothing}
     
     def get_status(self):
         """Ritorna stato del sistema"""
         return self.status_info
+    
+    def cleanup(self):
+        """Pulisce tutte le risorse"""
+        try:
+            if self.webcam:
+                self.webcam.release()
+                self.webcam = None
+                
+            if self.virtual_camera:
+                self.virtual_camera.close()
+                self.virtual_camera = None
+                
+            if self.selfie_segmentation:
+                self.selfie_segmentation.close()
+                self.selfie_segmentation = None
+                
+            self.is_running = False
+            self.status_info["is_running"] = False
+            self.status_info["virtual_camera_active"] = False
+            
+            logger.info("Risorse rilasciate con successo")
+        except Exception as e:
+            logger.error(f"Errore nella pulizia delle risorse: {e}")
 
 # Istanza globale del motore
 engine = StreamBlurEngine()
