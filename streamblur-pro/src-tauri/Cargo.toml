@@ -1,0 +1,23 @@
+[package]
+name = "streamblur-pro"
+version = "0.1.0"
+description = "AI-powered virtual camera with real-time background blur"
+authors = ["StreamBlur Pro Team"]
+license = "MIT"
+repository = ""
+edition = "2021"
+
+# Usa Tauri v1 invece di v2
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+tauri = { version = "1.5", features = ["api-all"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
