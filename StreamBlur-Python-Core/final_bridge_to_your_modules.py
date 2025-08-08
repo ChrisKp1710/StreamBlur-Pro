@@ -243,13 +243,49 @@ async def update_settings(settings: dict):
         if not config:
             raise HTTPException(status_code=500, detail="Configurazione non caricata")
         
-        # Aggiorna usando i TUOI metodi di configurazione
+        # 🔍 DEBUG: Log di tutto quello che arriva (solo se diverso da blur)
+        if "strength" not in settings:
+            logger.info(f"🔧 Settings ricevuti: {settings}")
+        
+        # 🎛️ AGGIORNA IMPOSTAZIONI CON PROPAGAZIONE AI MODULI
         for key, value in settings.items():
+            # Skip log verboso per blur updates
+            if key not in ["strength", "mode"]:
+                logger.info(f"🔄 Processando {key} = {value}")
+            
+            # Aggiorna config principale
             if hasattr(config, key):
                 setattr(config, key, value)
                 logger.info(f"✅ Aggiornato {key} = {value} nella TUA configurazione")
+            
+            # 🔥 PROPAGA BLUR INTENSITY AI MODULI ATTIVI
+            if key in ["blur_strength", "blur_intensity", "blurStrength", "blurIntensity", "strength", "intensity"] and effects_processor:
+                try:
+                    # Usa il metodo del TUO EffectsProcessor
+                    if hasattr(effects_processor, 'set_blur_intensity'):
+                        effects_processor.set_blur_intensity(int(value))
+                        # Log solo significativi (ogni 5 unità)
+                        if int(value) % 5 == 0:
+                            logger.info(f"🎛️ Blur intensity: {value}")
+                    elif hasattr(effects_processor, 'blur_intensity'):
+                        effects_processor.blur_intensity = int(value)
+                        if int(value) % 5 == 0:
+                            logger.info(f"🎛️ Blur intensity: {value}")
+                    else:
+                        logger.warning(f"⚠️ TUO EffectsProcessor non supporta blur_intensity")
+                except Exception as e:
+                    logger.error(f"❌ Errore aggiornamento blur intensity: {e}")
+            
+            # 🤖 PROPAGA AI SETTINGS
+            if key in ["ai_enabled", "performance_mode"] and ai_processor:
+                try:
+                    if hasattr(ai_processor, key):
+                        setattr(ai_processor, key, value)
+                        logger.info(f"✅ AI setting {key} aggiornato: {value}")
+                except Exception as e:
+                    logger.error(f"❌ Errore aggiornamento AI {key}: {e}")
         
-        return {"status": "updated", "settings": settings}
+        return {"status": "updated", "settings": settings, "propagated": True}
         
     except Exception as e:
         logger.error(f"❌ Errore aggiornamento impostazioni: {e}")
@@ -288,7 +324,17 @@ if __name__ == "__main__":
     # Inizializza i TUOI moduli
     if initialize_your_modules():
         logger.info("✅ Bridge pronto - usando i TUOI moduli dalla cartella src/ con package support")
-        uvicorn.run(app, host="127.0.0.1", port=8000)
+        
+        # Configurazione server ottimizzata per ridurre errori di connessione
+        config_server = {
+            "host": "127.0.0.1",
+            "port": 8000,
+            "log_level": "warning",  # Riduce log verbosi
+            "access_log": False,     # Disabilita access log per ridurre spam
+            "timeout_keep_alive": 5  # Timeout più breve per evitare connessioni stagnanti
+        }
+        
+        uvicorn.run(app, **config_server)
     else:
         logger.error("❌ Impossibile avviare - problemi con i TUOI moduli")
         sys.exit(1)
