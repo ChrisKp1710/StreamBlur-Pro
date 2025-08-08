@@ -43,11 +43,21 @@ virtual_camera_manager = None
 performance_monitor = None
 config = None
 
+# Variabili per il controllo del loop e statistiche
+main_loop_running = False
+main_loop_thread = None
+current_real_fps = 0.0  # 📊 FPS reali per il card Performance (NO spam log)
+
 def main_processing_loop():
     """Loop principale che usa i TUOI moduli per processare i frame"""
-    global main_loop_running
+    global main_loop_running, current_real_fps
     
     logger.info("🔄 Avviato loop principale con i TUOI moduli originali!")
+    
+    # 📊 Variabili per calcolo FPS reali (SENZA spam log)
+    frame_count = 0
+    start_time = time.time()
+    last_fps_update = time.time()
     
     while main_loop_running:
         try:
@@ -56,6 +66,19 @@ def main_processing_loop():
             if frame is None:
                 time.sleep(0.01)  # Aspetta un po' se non ci sono frame
                 continue
+            
+            # 📊 Conta frame processati per FPS reali
+            frame_count += 1
+            current_time = time.time()
+            
+            # Calcola FPS reali ogni secondo (SILENZIOSO)
+            if current_time - last_fps_update >= 1.0:
+                elapsed = current_time - start_time
+                if elapsed > 0:
+                    current_real_fps = frame_count / elapsed
+                frame_count = 0
+                start_time = current_time
+                last_fps_update = current_time
             
             # Ottieni le dimensioni del frame
             height, width = frame.shape[:2]
@@ -82,6 +105,8 @@ def main_processing_loop():
             logger.error(f"❌ Errore nel loop principale: {e}")
             time.sleep(0.1)  # Aspetta un po' in caso di errore
     
+    # Reset FPS quando il loop si ferma
+    current_real_fps = 0.0
     logger.info("⏹️ Loop principale fermato")
 
 def initialize_your_modules():
@@ -366,25 +391,33 @@ async def update_ai_settings(settings: dict):
 @app.get("/status")
 async def get_status():
     """Stato dettagliato di StreamBlur usando i TUOI moduli"""
+    global main_loop_running, current_real_fps
     try:
-        status = {}
+        # 📊 Struttura che si aspetta il frontend Tauri
+        # FPS = 0 quando spento, FPS reali quando attivo
+        fps_value = current_real_fps if main_loop_running else 0.0
         
-        if camera_manager:
-            status["camera"] = {
-                "active": camera_manager.is_active if hasattr(camera_manager, 'is_active') else False,
-                "fps": camera_manager.fps if hasattr(camera_manager, 'fps') else 0
-            }
+        # Metriche sistema (opzionali)
+        cpu_usage = 0.0
+        memory_usage = 0.0
         
-        if performance_monitor:
-            status["performance"] = performance_monitor.get_stats() if hasattr(performance_monitor, 'get_stats') else {}
+        try:
+            import psutil
+            cpu_usage = psutil.cpu_percent(interval=0.1)
+            memory_info = psutil.virtual_memory()
+            memory_usage = memory_info.used / (1024 * 1024)  # MB
+        except:
+            pass
         
-        if config:
-            status["config"] = {
-                "blur_strength": config.blur_strength if hasattr(config, 'blur_strength') else 0,
-                "ai_enabled": config.ai_enabled if hasattr(config, 'ai_enabled') else False
-            }
+        # Struttura esatta per il frontend
+        status_response = {
+            "running": main_loop_running,
+            "fps": round(fps_value, 1),
+            "cpu_usage": round(cpu_usage, 1), 
+            "memory_usage": round(memory_usage, 1)
+        }
         
-        return status
+        return status_response
         
     except Exception as e:
         logger.error(f"❌ Errore get status: {e}")
