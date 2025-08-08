@@ -399,13 +399,20 @@ async def get_status():
         
         # Metriche sistema (opzionali)
         cpu_usage = 0.0
-        memory_usage = 0.0
+        memory_usage_gb = 0.0  # 📊 Convertiamo in GB per maggiore leggibilità
         
         try:
             import psutil
-            cpu_usage = psutil.cpu_percent(interval=0.1)
-            memory_info = psutil.virtual_memory()
-            memory_usage = memory_info.used / (1024 * 1024)  # MB
+            import os
+            # 📊 Metriche specifiche del processo StreamBlur, non del sistema
+            current_process = psutil.Process(os.getpid())
+            raw_cpu = current_process.cpu_percent(interval=0.1)  # CPU del processo StreamBlur
+            # 📊 Normalizziamo per il numero di CPU core (0-100% invece di 0-400%+)
+            cpu_count = psutil.cpu_count()
+            cpu_usage = min(raw_cpu / cpu_count, 100.0) if cpu_count > 0 else raw_cpu
+            memory_info = current_process.memory_info()
+            memory_usage_mb = memory_info.rss / (1024 * 1024)  # MB del processo corrente
+            memory_usage_gb = memory_usage_mb / 1024  # 📊 Converti in GB
         except:
             pass
         
@@ -414,7 +421,7 @@ async def get_status():
             "running": main_loop_running,
             "fps": round(fps_value, 1),
             "cpu_usage": round(cpu_usage, 1), 
-            "memory_usage": round(memory_usage, 1)
+            "memory_usage": round(memory_usage_gb, 1)  # 📊 GB invece di MB
         }
         
         return status_response

@@ -40,14 +40,14 @@ export function Performance({ fps, cpuUsage = 0, memoryUsage = 0 }: PerformanceP
       
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600 dark:text-gray-400">FPS</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">FPS v.cam</span>
           <span className="text-sm font-mono font-bold text-blue-600 dark:text-blue-400">
             {fps.toFixed(0)}
           </span>
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600 dark:text-gray-400">CPU</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">CPU app</span>
           <span className={`text-xs font-medium ${getCpuColor()}`}>
             {cpuUsage.toFixed(1)}%
           </span>
@@ -56,7 +56,7 @@ export function Performance({ fps, cpuUsage = 0, memoryUsage = 0 }: PerformanceP
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-600 dark:text-gray-400">Memory</span>
           <span className={`text-xs font-medium ${getMemoryColor()}`}>
-            {memoryUsage.toFixed(0)} MB
+            {memoryUsage.toFixed(1)} GB
           </span>
         </div>
         
