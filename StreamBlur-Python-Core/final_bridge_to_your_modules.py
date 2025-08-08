@@ -276,14 +276,60 @@ async def update_settings(settings: dict):
                 except Exception as e:
                     logger.error(f"❌ Errore aggiornamento blur intensity: {e}")
             
-            # 🤖 PROPAGA AI SETTINGS
-            if key in ["ai_enabled", "performance_mode"] and ai_processor:
+            # 🤖 PROPAGA AI SETTINGS AI TUOI MODULI
+            if key in ["ai_enabled", "performance_mode", "edgeSmoothing", "edge_smoothing", "temporalSmoothing", "temporal_smoothing"] and ai_processor:
                 try:
-                    if hasattr(ai_processor, key):
+                    # Performance Mode (solo se AI è già inizializzato)
+                    if key in ["performance_mode", "performanceMode"]:
+                        if hasattr(ai_processor, 'switch_model') and hasattr(ai_processor, 'segmentation') and ai_processor.segmentation:
+                            ai_processor.switch_model(bool(value))
+                            logger.info(f"🤖 Performance mode aggiornato nel TUO AIProcessor: {value}")
+                        else:
+                            logger.info(f"🤖 Performance mode salvato per dopo l'inizializzazione: {value}")
+                    
+                    # Edge Smoothing
+                    elif key in ["edgeSmoothing", "edge_smoothing"]:
+                        if hasattr(ai_processor, 'set_edge_smoothing'):
+                            ai_processor.set_edge_smoothing(bool(value))
+                            logger.info(f"🎯 Edge smoothing aggiornato nel TUO AIProcessor: {value}")
+                    
+                    # Temporal Smoothing  
+                    elif key in ["temporalSmoothing", "temporal_smoothing"]:
+                        if hasattr(ai_processor, 'set_temporal_smoothing'):
+                            ai_processor.set_temporal_smoothing(bool(value))
+                            logger.info(f"⏱️ Temporal smoothing aggiornato nel TUO AIProcessor: {value}")
+                    
+                    # Generic AI settings
+                    elif hasattr(ai_processor, key):
                         setattr(ai_processor, key, value)
-                        logger.info(f"✅ AI setting {key} aggiornato: {value}")
+                        logger.info(f"🤖 AI setting {key} aggiornato: {value}")
+                        
                 except Exception as e:
                     logger.error(f"❌ Errore aggiornamento AI {key}: {e}")
+            
+            # 🎛️ LEGACY: Supporto per quality/smoothing (mappatura vecchia)
+            if key == "quality" and ai_processor:
+                # Mappa quality a performance mode
+                performance_mode = value == "fast" or value == "performance"
+                try:
+                    # Solo se AI è inizializzato
+                    if hasattr(ai_processor, 'switch_model') and hasattr(ai_processor, 'segmentation') and ai_processor.segmentation:
+                        ai_processor.switch_model(performance_mode)
+                        logger.info(f"🤖 Quality→Performance mode applicato: {performance_mode}")
+                    else:
+                        logger.info(f"🤖 Quality→Performance mode salvato: {performance_mode}")
+                except Exception as e:
+                    logger.error(f"❌ Errore quality mapping: {e}")
+                    
+            if key == "smoothing" and ai_processor:
+                # Mappa smoothing a temporal smoothing 
+                temporal_enabled = float(value) > 0.5
+                try:
+                    if hasattr(ai_processor, 'set_temporal_smoothing'):
+                        ai_processor.set_temporal_smoothing(temporal_enabled)
+                        logger.info(f"⏱️ Smoothing→Temporal: {temporal_enabled}")
+                except Exception as e:
+                    logger.error(f"❌ Errore smoothing mapping: {e}")
         
         return {"status": "updated", "settings": settings, "propagated": True}
         
