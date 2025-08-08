@@ -162,42 +162,50 @@ class AIProcessor:
             return None
     
     def _apply_edge_smoothing(self, mask: np.ndarray) -> np.ndarray:
-        """Applica edge smoothing per bordi più morbidi"""
-        kernel_size = max(1, self.edge_kernel_size)  # Assicura che sia >= 1
+        """Applica edge smoothing per bordi più morbidi - EFFETTO AMPLIFICATO"""
+        # Kernel più grande per effetto più visibile
+        kernel_size = max(5, self.edge_kernel_size * 2)  # Raddoppia l'effetto
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, 
                                          (kernel_size, kernel_size))
         
-        # Morphological closing per riempire buchi
+        # Morphological closing più aggressivo
         mask_smooth = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+        mask_smooth = cv2.morphologyEx(mask_smooth, cv2.MORPH_OPEN, kernel)
         
-        # Gaussian blur leggero per bordi smooth
-        mask_smooth = cv2.GaussianBlur(mask_smooth, (3, 3), 0.5)
+        # Gaussian blur più visibile
+        mask_smooth = cv2.GaussianBlur(mask_smooth, (7, 7), 1.5)  # Blur più forte
         
+        # Log rimosso - troppo spam!
         return mask_smooth
     
     def _apply_temporal_smoothing(self, mask: np.ndarray) -> np.ndarray:
-        """Applica temporal smoothing per stabilità movimento"""
+        """Applica temporal smoothing per stabilità movimento - EFFETTO AMPLIFICATO"""
         self.mask_buffer.append(mask.copy())
         
-        if len(self.mask_buffer) >= 2:
-            # Media ponderata: 70% frame corrente, 30% precedente
-            smoothed_mask = (0.7 * mask.astype(np.float32) + 
-                           0.3 * self.mask_buffer[-2].astype(np.float32))
+        if len(self.mask_buffer) >= 3:  # Usa più frame per effetto più stabile
+            # Media ponderata più aggressiva: 50% corrente, 50% media precedenti
+            prev_avg = np.mean([m.astype(np.float32) for m in self.mask_buffer[-3:-1]], axis=0)
+            smoothed_mask = (0.5 * mask.astype(np.float32) + 0.5 * prev_avg)
+            # Log rimosso - troppo spam!
             return smoothed_mask.astype(np.uint8)
         
         return mask
     
     def set_edge_smoothing(self, enabled: bool):
         """Abilita/disabilita edge smoothing"""
-        self.edge_smoothing = enabled
-        self.config.set('effects.edge_smoothing', enabled)
+        if self.edge_smoothing != enabled:
+            self.edge_smoothing = enabled
+            self.config.set('effects.edge_smoothing', enabled)
+            print(f"🎯 Edge smoothing: {'ATTIVATO' if enabled else 'DISATTIVATO'}")
     
     def set_temporal_smoothing(self, enabled: bool):
         """Abilita/disabilita temporal smoothing"""
-        self.temporal_smoothing = enabled
-        if not enabled:
-            self.mask_buffer.clear()
-        self.config.set('effects.temporal_smoothing', enabled)
+        if self.temporal_smoothing != enabled:
+            self.temporal_smoothing = enabled
+            if not enabled:
+                self.mask_buffer.clear()
+            self.config.set('effects.temporal_smoothing', enabled)
+            print(f"⏱️ Temporal smoothing: {'ATTIVATO' if enabled else 'DISATTIVATO'}")
     
     def get_stats(self) -> dict:
         """Ottieni statistiche AI processor"""
@@ -246,7 +254,8 @@ class AIProcessor:
             if old_performance_mode == performance_mode:
                 return True  # Nessun cambio necessario
             
-            print(f"🔄 Cambio modello AI: {'Performance' if performance_mode else 'Accurato'}...")
+            mode_name = "� PERFORMANCE (veloce)" if performance_mode else "🎯 ACCURATO (preciso)"
+            print(f"🔄 Cambio modello AI → {mode_name}")
             
             # Aggiorna configurazione
             self.config.set('ai.performance_mode', performance_mode)

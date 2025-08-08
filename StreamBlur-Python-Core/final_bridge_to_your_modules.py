@@ -309,13 +309,15 @@ async def update_settings(settings: dict):
             
             # 🎛️ LEGACY: Supporto per quality/smoothing (mappatura vecchia)
             if key == "quality" and ai_processor:
-                # Mappa quality a performance mode
-                performance_mode = value == "fast" or value == "performance"
+                # Mappa quality a performance mode con logging amplificato
+                # 🔧 FISSO: low=VELOCE, medium/high=ACCURATO
+                performance_mode = value == "low"  # low = performance mode = più FPS
                 try:
                     # Solo se AI è inizializzato
                     if hasattr(ai_processor, 'switch_model') and hasattr(ai_processor, 'segmentation') and ai_processor.segmentation:
                         ai_processor.switch_model(performance_mode)
-                        logger.info(f"🤖 Quality→Performance mode applicato: {performance_mode}")
+                        quality_desc = "🚀 VELOCE (meno accurato)" if performance_mode else "🎯 ACCURATO (più lento)"
+                        logger.info(f"🤖 Quality→Performance mode applicato: {performance_mode} → {quality_desc}")
                     else:
                         logger.info(f"🤖 Quality→Performance mode salvato: {performance_mode}")
                 except Exception as e:
