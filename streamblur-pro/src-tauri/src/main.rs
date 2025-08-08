@@ -42,11 +42,11 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn start_streamblur_engine(state: State<'_, AppState>) -> Result<String, String> {
-    // Configura path per StreamBlur Pro Advanced
+    // Configura path per il BRIDGE FINALE con package support
     let python_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_env\Scripts\python.exe";
-    let script_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_pro_advanced.py";
+    let script_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\final_bridge_to_your_modules.py";
     
-    println!("🚀 Avviando StreamBlur Pro Advanced...");
+    println!("🚀 Avviando BRIDGE FINALE con package support...");
     
     match Command::new(python_path)
         .arg(script_path)
@@ -71,7 +71,7 @@ async fn start_streamblur_engine(state: State<'_, AppState>) -> Result<String, S
             // Invia comando di start al backend
             let client = reqwest::Client::new();
             match client
-                .post("http://127.0.0.1:8080/api/start")
+                .post("http://127.0.0.1:8000/start")
                 .json(&serde_json::json!({}))
                 .send()
                 .await
@@ -102,7 +102,7 @@ async fn stop_streamblur_engine(state: State<'_, AppState>) -> Result<String, St
     // Prima invia comando di stop al backend
     let client = reqwest::Client::new();
     let _ = client
-        .post("http://127.0.0.1:8080/api/stop")
+        .post("http://127.0.0.1:8000/stop")
         .json(&serde_json::json!({}))
         .send()
         .await;
@@ -131,7 +131,7 @@ async fn get_streamblur_status(state: State<'_, AppState>) -> Result<StreamBlurS
     let client = reqwest::Client::new();
     
     match client
-        .get("http://127.0.0.1:8080/api/status")
+        .get("http://127.0.0.1:8000/status")
         .send()
         .await
     {
@@ -196,7 +196,7 @@ async fn update_blur_settings(intensity: u8, enabled: bool) -> Result<String, St
     });
     
     match client
-        .post("http://127.0.0.1:8080/api/blur")
+        .post("http://127.0.0.1:8000/settings")
         .json(&payload)
         .send()
         .await
@@ -224,7 +224,7 @@ async fn update_ai_settings(performance_mode: bool, edge_smoothing: bool, tempor
     });
     
     match client
-        .post("http://127.0.0.1:8080/api/ai")
+        .post("http://127.0.0.1:8000/settings")
         .json(&payload)
         .send()
         .await
