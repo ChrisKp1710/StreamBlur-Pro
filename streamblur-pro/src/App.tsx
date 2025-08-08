@@ -13,6 +13,7 @@ interface StreamBlurStatus {
   fps: number;
   cpu_usage: number;
   memory_usage: number;
+  memory_mb: number;    // 📊 MB per logica condizionale
 }
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
   const [fps, setFps] = useState(0);
   const [cpuUsage, setCpuUsage] = useState(0);
   const [memoryUsage, setMemoryUsage] = useState(0);
+  const [memoryMb, setMemoryMb] = useState(0);  // 📊 MB per logica condizionale
   
   // Settings
   const [edgeSmoothing, setEdgeSmoothing] = useState(true);
@@ -39,6 +41,7 @@ function App() {
         setFps(status.fps);
         setCpuUsage(status.cpu_usage);
         setMemoryUsage(status.memory_usage);
+        setMemoryMb(status.memory_mb);  // 📊 Aggiorna anche MB
       } catch (error) {
         console.error("Errore nel recuperare lo stato:", error);
       }
@@ -118,7 +121,7 @@ function App() {
         {/* Control Panel - Mantiene altezza piena e simmetrica */}
         <div className="flex flex-col gap-3 h-full">
           <MainControl isActive={isActive} onToggle={handleStart} />
-          <Performance fps={fps} cpuUsage={cpuUsage} memoryUsage={memoryUsage} />
+          <Performance fps={fps} cpuUsage={cpuUsage} memoryUsage={memoryUsage} memoryMb={memoryMb} />
           <BlurControl blurIntensity={blurIntensity} setBlurIntensity={handleBlurChange} />
           <AISettings 
             edgeSmoothing={edgeSmoothing}

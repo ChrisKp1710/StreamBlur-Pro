@@ -4,9 +4,10 @@ interface PerformanceProps {
   fps: number;
   cpuUsage?: number;
   memoryUsage?: number;
+  memoryMb?: number;    // 📊 MB per logica condizionale
 }
 
-export function Performance({ fps, cpuUsage = 0, memoryUsage = 0 }: PerformanceProps) {
+export function Performance({ fps, cpuUsage = 0, memoryUsage = 0, memoryMb = 0 }: PerformanceProps) {
   const getStatusColor = () => {
     if (fps >= 25) return 'text-green-600 dark:text-green-400';
     if (fps >= 20) return 'text-yellow-600 dark:text-yellow-400';
@@ -56,7 +57,7 @@ export function Performance({ fps, cpuUsage = 0, memoryUsage = 0 }: PerformanceP
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-600 dark:text-gray-400">Memory</span>
           <span className={`text-xs font-medium ${getMemoryColor()}`}>
-            {memoryUsage.toFixed(1)} GB
+            {memoryMb > 0 && memoryMb < 1000 ? `${Math.round(memoryMb)} MB` : `${memoryUsage.toFixed(1)} GB`}
           </span>
         </div>
         

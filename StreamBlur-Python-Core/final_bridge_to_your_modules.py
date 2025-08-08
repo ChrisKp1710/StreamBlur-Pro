@@ -421,7 +421,8 @@ async def get_status():
             "running": main_loop_running,
             "fps": round(fps_value, 1),
             "cpu_usage": round(cpu_usage, 1), 
-            "memory_usage": round(memory_usage_gb, 1)  # 📊 GB invece di MB
+            "memory_usage": round(memory_usage_gb, 1),  # 📊 GB
+            "memory_mb": round(memory_usage_mb, 0)      # 📊 MB per logica condizionale
         }
         
         return status_response

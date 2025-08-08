@@ -13,6 +13,7 @@ struct StreamBlurStatus {
     fps: f32,
     cpu_usage: f32,
     memory_usage: f32,
+    memory_mb: f32,  // 📊 Aggiungi memory_mb
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -146,6 +147,7 @@ async fn get_streamblur_status(state: State<'_, AppState>) -> Result<StreamBlurS
                             fps: status.fps,
                             cpu_usage: status.cpu_usage,
                             memory_usage: status.memory_usage,
+                            memory_mb: status.memory_mb,  // 📊 Aggiungi memory_mb
                         };
                         Ok(status)
                     }
@@ -157,6 +159,7 @@ async fn get_streamblur_status(state: State<'_, AppState>) -> Result<StreamBlurS
                             fps: status_guard.fps,
                             cpu_usage: status_guard.cpu_usage,
                             memory_usage: status_guard.memory_usage,
+                            memory_mb: status_guard.memory_mb,  // 📊 Aggiungi memory_mb
                         })
                     }
                 }
@@ -168,6 +171,7 @@ async fn get_streamblur_status(state: State<'_, AppState>) -> Result<StreamBlurS
                     fps: status_guard.fps,
                     cpu_usage: status_guard.cpu_usage,
                     memory_usage: status_guard.memory_usage,
+                    memory_mb: status_guard.memory_mb,  // 📊 Aggiungi memory_mb
                 })
             }
         }
@@ -179,6 +183,7 @@ async fn get_streamblur_status(state: State<'_, AppState>) -> Result<StreamBlurS
                 fps: status_guard.fps,
                 cpu_usage: status_guard.cpu_usage,
                 memory_usage: status_guard.memory_usage,
+                memory_mb: status_guard.memory_mb,  // 📊 Aggiungi memory_mb
             })
         }
     }
@@ -249,6 +254,7 @@ fn main() {
             fps: 0.0,
             cpu_usage: 0.0,
             memory_usage: 0.0,
+            memory_mb: 0.0,  // 📊 Aggiungi memory_mb
         })),
     };
 
