@@ -28,6 +28,7 @@ function App() {
   const [edgeSmoothing, setEdgeSmoothing] = useState(true);
   const [temporalSmoothing, setTemporalSmoothing] = useState(true);
   const [performanceMode, setPerformanceMode] = useState(false);
+  const [quality, setQuality] = useState('medium'); // NEW: AI quality control
 
   // Polling dello stato ogni secondo
   useEffect(() => {
@@ -84,9 +85,10 @@ function App() {
       await invoke("update_ai_settings", {
         performanceMode,
         edgeSmoothing,
-        temporalSmoothing
+        temporalSmoothing,
+        quality // NEW: Include quality in AI settings
       });
-      console.log("🤖 Impostazioni AI aggiornate");
+      console.log("🤖 Impostazioni AI aggiornate - Quality:", quality);
     } catch (error) {
       console.error("❌ Errore aggiornamento AI:", error);
     }
@@ -97,23 +99,26 @@ function App() {
     if (isActive) {
       handleAISettingsChange();
     }
-  }, [edgeSmoothing, temporalSmoothing, performanceMode, isActive]);
+  }, [edgeSmoothing, temporalSmoothing, performanceMode, quality, isActive]); // NEW: Added quality to dependencies
 
   return (
     <div className="w-full h-full bg-white dark:bg-gray-900 flex flex-col overflow-hidden">
       <Header isActive={isActive} fps={fps} />
 
       {/* Main Content */}
-      <div className="flex-1 p-5 grid grid-cols-3 gap-5 min-h-0">
-        <CameraPreview 
-          previewEnabled={previewEnabled}
-          setPreviewEnabled={setPreviewEnabled}
-          isActive={isActive}
-          blurIntensity={blurIntensity}
-        />
+      <div className="flex-1 p-4 grid grid-cols-3 gap-4 min-h-0">
+        {/* Camera Preview - Ridotto ma mantenendo proporzioni */}
+        <div className="col-span-2">
+          <CameraPreview 
+            previewEnabled={previewEnabled}
+            setPreviewEnabled={setPreviewEnabled}
+            isActive={isActive}
+            blurIntensity={blurIntensity}
+          />
+        </div>
 
-        {/* Control Panel */}
-        <div className="flex flex-col h-full">
+        {/* Control Panel - Più spazio per i controlli */}
+        <div className="flex flex-col gap-3 h-full">
           <MainControl isActive={isActive} onToggle={handleStart} />
           <Performance fps={fps} cpuUsage={cpuUsage} memoryUsage={memoryUsage} />
           <BlurControl blurIntensity={blurIntensity} setBlurIntensity={handleBlurChange} />
@@ -124,6 +129,8 @@ function App() {
             setTemporalSmoothing={setTemporalSmoothing}
             performanceMode={performanceMode}
             setPerformanceMode={setPerformanceMode}
+            quality={quality}
+            setQuality={setQuality}
           />
         </div>
       </div>

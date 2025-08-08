@@ -32,13 +32,13 @@ export function Performance({ fps, cpuUsage = 0, memoryUsage = 0 }: PerformanceP
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
-      <div className="flex items-center mb-3">
-        <Activity className="w-4 h-4 text-blue-500 mr-2" />
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Performance</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 flex-shrink-0">
+      <div className="flex items-center mb-2">
+        <Activity className="w-3 h-3 text-blue-500 mr-2" />
+        <h3 className="text-xs font-semibold text-gray-900 dark:text-white">Performance</h3>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-600 dark:text-gray-400">FPS</span>
           <span className="text-sm font-mono font-bold text-blue-600 dark:text-blue-400">

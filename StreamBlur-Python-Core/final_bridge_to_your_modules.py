@@ -339,6 +339,30 @@ async def update_settings(settings: dict):
         logger.error(f"❌ Errore aggiornamento impostazioni: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# 🤖 AI SETTINGS UPDATE ENDPOINT
+@app.post("/api/ai-settings")
+async def update_ai_settings(settings: dict):
+    """Aggiorna specificamente le impostazioni AI"""
+    logger.info(f"🤖 Aggiornamento AI settings: {settings}")
+    
+    try:
+        # Propaga tutte le impostazioni tramite update_settings esistente
+        result = await update_settings(settings)
+        
+        # Log dettagliato per debug
+        logger.info(f"🤖 AI settings aggiornate con successo: {result}")
+        
+        return {
+            "status": "ai_settings_updated", 
+            "settings": settings, 
+            "quality_mode": settings.get('quality', 'unknown'),
+            "propagated": True
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Errore aggiornamento AI settings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/status")
 async def get_status():
     """Stato dettagliato di StreamBlur usando i TUOI moduli"""
