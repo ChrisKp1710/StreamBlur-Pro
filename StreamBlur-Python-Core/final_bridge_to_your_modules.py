@@ -126,7 +126,15 @@ async def start_streamblur():
             raise HTTPException(status_code=500, detail="Errore avvio cattura camera")
         
         # Avvia la virtual camera
-        virtual_camera_manager.start()
+        # Prima inizializza
+        virtual_init_success = virtual_camera_manager.initialize()
+        if not virtual_init_success:
+            logger.warning("⚠️ Errore inizializzazione virtual camera, continuo comunque...")
+        
+        # Poi avvia lo streaming
+        virtual_start_success = virtual_camera_manager.start_streaming()
+        if not virtual_start_success:
+            logger.warning("⚠️ Errore avvio streaming virtual camera, continuo comunque...")
         
         logger.info("🚀 StreamBlur avviato usando i TUOI moduli originali!")
         return {"status": "started", "using_your_modules": True}
@@ -143,7 +151,8 @@ async def stop_streamblur():
             camera_manager.stop_capture()
             camera_manager.cleanup()
         if virtual_camera_manager:
-            virtual_camera_manager.stop()
+            virtual_camera_manager.stop_streaming()
+            virtual_camera_manager.cleanup()
         
         logger.info("⏹️ StreamBlur fermato usando i TUOI moduli originali")
         return {"status": "stopped"}
