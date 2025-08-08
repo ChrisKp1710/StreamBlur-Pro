@@ -101,25 +101,21 @@ def initialize_your_modules():
         performance_monitor = PerformanceMonitor()
         logger.info("✅ TUO PerformanceMonitor inizializzato")
         
-        # Importa e inizializza il TUO CameraManager
+        # 🚀 CARICAMENTO MODULI SENZA PRE-INIZIALIZZAZIONE
+        # Importa moduli ma NON li inizializza (lazy loading)
         from src.core.camera import CameraManager
-        camera_manager = CameraManager(config, performance_monitor)
-        logger.info("✅ TUO CameraManager inizializzato")
-        
-        # Importa e inizializza il TUO AIProcessor
         from src.core.ai_processor import AIProcessor
-        ai_processor = AIProcessor(config, performance_monitor)
-        logger.info("✅ TUO AIProcessor inizializzato")
-        
-        # Importa e inizializza il TUO EffectsProcessor (solo config)
-        from src.core.effects import EffectsProcessor
-        effects_processor = EffectsProcessor(config)
-        logger.info("✅ TUO EffectsProcessor inizializzato")
-        
-        # Importa e inizializza il TUO VirtualCameraManager (config + performance)
+        from src.core.effects import EffectsProcessor  
         from src.core.virtual_camera import VirtualCameraManager
+        
+        # Crea istanze ma NON inizializza (per restart multipli)
+        camera_manager = CameraManager(config, performance_monitor)
+        ai_processor = AIProcessor(config, performance_monitor)
+        effects_processor = EffectsProcessor(config)
         virtual_camera_manager = VirtualCameraManager(config, performance_monitor)
-        logger.info("✅ TUO VirtualCameraManager inizializzato")
+        
+        logger.info("✅ Tutti i moduli caricati (lazy initialization)")
+        logger.info("⚡ Sistema pronto per start/stop multipli!")
         
         logger.info("🎉 TUTTI I TUOI MODULI ORIGINALI SONO STATI CARICATI CORRETTAMENTE!")
         return True
@@ -160,42 +156,43 @@ async def start_streamblur():
     try:
         if not all([camera_manager, ai_processor, effects_processor, virtual_camera_manager]):
             raise HTTPException(status_code=500, detail="Moduli non inizializzati")
+
+        # 🚀 SISTEMA RESTART-SAFE: Inizializza ogni volta per garantire funzionamento
+        logger.info("🔄 Inizializzazione componenti (restart-safe)...")
         
-        # Usa i TUOI metodi originali
-        # Prima inizializza la camera
+        # Prima la camera
         init_success = camera_manager.initialize()
         if not init_success:
             raise HTTPException(status_code=500, detail="Errore inizializzazione camera")
         
-        # Poi avvia la cattura
+        # Poi avvia cattura
         capture_success = camera_manager.start_capture()
         if not capture_success:
             raise HTTPException(status_code=500, detail="Errore avvio cattura camera")
-        
+
         # 🤖 INIZIALIZZA L'AI PROCESSOR (MediaPipe)
         ai_init_success = ai_processor.initialize()
         if not ai_init_success:
             logger.warning("⚠️ Errore inizializzazione AI, continuo comunque...")
-        
-        # Avvia la virtual camera
-        # Prima inizializza
+
+        # Avvia la virtual camera - prima inizializza
         virtual_init_success = virtual_camera_manager.initialize()
         if not virtual_init_success:
             logger.warning("⚠️ Errore inizializzazione virtual camera, continuo comunque...")
         
-        # Poi avvia lo streaming
+        # Poi avvia streaming
         virtual_start_success = virtual_camera_manager.start_streaming()
         if not virtual_start_success:
             logger.warning("⚠️ Errore avvio streaming virtual camera, continuo comunque...")
-        
+
         # 🚀 AVVIA IL LOOP PRINCIPALE CHE USA I TUOI MODULI!
         main_loop_running = True
         main_loop_thread = threading.Thread(target=main_processing_loop, daemon=True)
         main_loop_thread.start()
-        
+
         logger.info("🚀 StreamBlur avviato usando i TUOI moduli originali!")
         logger.info("🔄 Loop principale attivo - processamento frame in corso!")
-        return {"status": "started", "using_your_modules": True, "main_loop_active": True}
+        return {"status": "started", "using_your_modules": True, "main_loop_active": True, "restart_safe": True}
         
     except Exception as e:
         logger.error(f"❌ Errore avvio: {e}")
@@ -212,15 +209,28 @@ async def stop_streamblur():
         if main_loop_thread and main_loop_thread.is_alive():
             main_loop_thread.join(timeout=2.0)
         
+        logger.info("⏹️ Loop principale fermato")
+        
+        # 🧹 CLEANUP COMPLETO E RESET PER RESTART
         if camera_manager:
             camera_manager.stop_capture()
             camera_manager.cleanup()
+            logger.info("✅ Camera cleanup completato")
+            
         if virtual_camera_manager:
             virtual_camera_manager.stop_streaming()
             virtual_camera_manager.cleanup()
+            logger.info("✅ Virtual Camera cleanup completato")
+        
+        # 🔄 RESET AI per restart pulito
+        if ai_processor:
+            # Reset interno per permettere restart
+            if hasattr(ai_processor, 'reset_for_restart'):
+                ai_processor.reset_for_restart()
+            logger.info("✅ AI reset per restart")
         
         logger.info("⏹️ StreamBlur fermato usando i TUOI moduli originali")
-        return {"status": "stopped"}
+        return {"status": "stopped", "reset_complete": True}
         
     except Exception as e:
         logger.error(f"❌ Errore stop: {e}")

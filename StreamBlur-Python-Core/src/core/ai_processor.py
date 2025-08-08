@@ -221,6 +221,23 @@ class AIProcessor:
         self.mask_buffer.clear()
         print("✅ AI cleanup completato")
     
+    def reset_for_restart(self):
+        """Reset completo per permettere restart pulito"""
+        print("🔄 Reset AI per restart...")
+        
+        # Chiudi segmentatore ma non rilasciare MediaPipe
+        if self.segmentation:
+            self.segmentation.close()
+            self.segmentation = None
+        
+        # Pulisci buffer
+        self.mask_buffer.clear()
+        
+        # Resetta flag
+        self.gpu_available = False
+        
+        print("✅ Reset AI completato - pronto per restart")
+    
     def switch_model(self, performance_mode: bool):
         """Cambia modello AI dinamicamente senza riavvio"""
         try:
