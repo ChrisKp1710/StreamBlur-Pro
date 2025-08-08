@@ -107,17 +107,15 @@ function App() {
 
       {/* Main Content */}
       <div className="flex-1 p-4 grid grid-cols-3 gap-4 min-h-0">
-        {/* Camera Preview - Ridotto ma mantenendo proporzioni */}
-        <div className="col-span-2">
-          <CameraPreview 
-            previewEnabled={previewEnabled}
-            setPreviewEnabled={setPreviewEnabled}
-            isActive={isActive}
-            blurIntensity={blurIntensity}
-          />
-        </div>
+        {/* Camera Preview - Torna alle dimensioni originali */}
+        <CameraPreview 
+          previewEnabled={previewEnabled}
+          setPreviewEnabled={setPreviewEnabled}
+          isActive={isActive}
+          blurIntensity={blurIntensity}
+        />
 
-        {/* Control Panel - Più spazio per i controlli */}
+        {/* Control Panel - Mantiene altezza piena e simmetrica */}
         <div className="flex flex-col gap-3 h-full">
           <MainControl isActive={isActive} onToggle={handleStart} />
           <Performance fps={fps} cpuUsage={cpuUsage} memoryUsage={memoryUsage} />
