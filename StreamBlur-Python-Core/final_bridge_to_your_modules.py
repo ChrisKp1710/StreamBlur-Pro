@@ -10,6 +10,10 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI, HTTPException
 import logging
+import threading
+import time
+import cv2
+import numpy as np
 
 # Configura logging
 logging.basicConfig(level=logging.INFO)
@@ -38,6 +42,47 @@ effects_processor = None
 virtual_camera_manager = None
 performance_monitor = None
 config = None
+
+def main_processing_loop():
+    """Loop principale che usa i TUOI moduli per processare i frame"""
+    global main_loop_running
+    
+    logger.info("🔄 Avviato loop principale con i TUOI moduli originali!")
+    
+    while main_loop_running:
+        try:
+            # 1. Cattura frame usando il TUO CameraManager
+            frame = camera_manager.get_frame()
+            if frame is None:
+                time.sleep(0.01)  # Aspetta un po' se non ci sono frame
+                continue
+            
+            # Ottieni le dimensioni del frame
+            height, width = frame.shape[:2]
+            output_size = (width, height)
+            
+            # 2. Processa con il TUO AIProcessor per la segmentazione
+            person_mask = ai_processor.process_frame(frame, output_size)
+            
+            # 3. Applica blur solo allo sfondo usando il TUO EffectsProcessor  
+            if person_mask is not None:
+                blurred_frame = effects_processor.apply_background_blur(frame, person_mask)
+            else:
+                # Se non c'è mask, invia il frame originale
+                blurred_frame = frame
+            
+            # 4. Invia alla virtual camera usando il TUO VirtualCameraManager
+            virtual_camera_manager.send_frame(blurred_frame)
+            
+            # 5. Aggiorna statistiche con il TUO PerformanceMonitor
+            if hasattr(performance_monitor, 'frame_processed'):
+                performance_monitor.frame_processed()
+            
+        except Exception as e:
+            logger.error(f"❌ Errore nel loop principale: {e}")
+            time.sleep(0.1)  # Aspetta un po' in caso di errore
+    
+    logger.info("⏹️ Loop principale fermato")
 
 def initialize_your_modules():
     """Inizializza i TUOI moduli originali usando la struttura package corretta"""
@@ -110,6 +155,8 @@ async def health_check():
 @app.post("/start")
 async def start_streamblur():
     """Avvia StreamBlur usando i TUOI moduli originali"""
+    global main_loop_running, main_loop_thread
+    
     try:
         if not all([camera_manager, ai_processor, effects_processor, virtual_camera_manager]):
             raise HTTPException(status_code=500, detail="Moduli non inizializzati")
@@ -125,6 +172,11 @@ async def start_streamblur():
         if not capture_success:
             raise HTTPException(status_code=500, detail="Errore avvio cattura camera")
         
+        # 🤖 INIZIALIZZA L'AI PROCESSOR (MediaPipe)
+        ai_init_success = ai_processor.initialize()
+        if not ai_init_success:
+            logger.warning("⚠️ Errore inizializzazione AI, continuo comunque...")
+        
         # Avvia la virtual camera
         # Prima inizializza
         virtual_init_success = virtual_camera_manager.initialize()
@@ -136,8 +188,14 @@ async def start_streamblur():
         if not virtual_start_success:
             logger.warning("⚠️ Errore avvio streaming virtual camera, continuo comunque...")
         
+        # 🚀 AVVIA IL LOOP PRINCIPALE CHE USA I TUOI MODULI!
+        main_loop_running = True
+        main_loop_thread = threading.Thread(target=main_processing_loop, daemon=True)
+        main_loop_thread.start()
+        
         logger.info("🚀 StreamBlur avviato usando i TUOI moduli originali!")
-        return {"status": "started", "using_your_modules": True}
+        logger.info("🔄 Loop principale attivo - processamento frame in corso!")
+        return {"status": "started", "using_your_modules": True, "main_loop_active": True}
         
     except Exception as e:
         logger.error(f"❌ Errore avvio: {e}")
@@ -146,7 +204,14 @@ async def start_streamblur():
 @app.post("/stop")
 async def stop_streamblur():
     """Ferma StreamBlur usando i TUOI metodi originali"""
+    global main_loop_running, main_loop_thread
+    
     try:
+        # Ferma il loop principale
+        main_loop_running = False
+        if main_loop_thread and main_loop_thread.is_alive():
+            main_loop_thread.join(timeout=2.0)
+        
         if camera_manager:
             camera_manager.stop_capture()
             camera_manager.cleanup()
