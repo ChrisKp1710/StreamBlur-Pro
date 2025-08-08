@@ -30,9 +30,10 @@ interface QualitySelectProps {
   quality: string;
   setQuality: (value: string) => void;
   label: string;
+  disabled?: boolean;
 }
 
-function QualitySelect({ quality, setQuality, label }: QualitySelectProps) {
+function QualitySelect({ quality, setQuality, label, disabled = false }: QualitySelectProps) {
   const qualities = [
     { value: 'low', label: 'Low (Fast)', description: 'Performance mode - più veloce' },
     { value: 'medium', label: 'Medium', description: 'Bilanciato' },
@@ -45,7 +46,12 @@ function QualitySelect({ quality, setQuality, label }: QualitySelectProps) {
       <select
         value={quality}
         onChange={(e) => setQuality(e.target.value)}
-        className="w-full text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-1 py-0.5 text-gray-900 dark:text-white"
+        disabled={disabled}
+        className={`w-full text-xs border border-gray-300 dark:border-gray-600 rounded px-1 py-0.5 text-gray-900 dark:text-white ${
+          disabled 
+            ? 'bg-gray-100 dark:bg-gray-600 cursor-not-allowed opacity-50' 
+            : 'bg-white dark:bg-gray-700'
+        }`}
       >
         {qualities.map((q) => (
           <option key={q.value} value={q.value}>
@@ -54,7 +60,10 @@ function QualitySelect({ quality, setQuality, label }: QualitySelectProps) {
         ))}
       </select>
       <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
-        {qualities.find(q => q.value === quality)?.description}
+        {disabled 
+          ? "Disabilitato - Performance Mode Legacy attivo" 
+          : qualities.find(q => q.value === quality)?.description
+        }
       </div>
     </div>
   );
@@ -102,6 +111,7 @@ export function AISettings({
               quality={quality}
               setQuality={setQuality}
               label="AI Quality"
+              disabled={performanceMode} // Disabilita quando Performance Mode Legacy è attivo
             />
           )}
           
