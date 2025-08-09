@@ -1,10 +1,9 @@
-# 🎥 StreamBlur Pro
+<h1 align="center">🎥 StreamBlur Pro</h1>
 
 <div align="center">
-  <img src="public/tauri.svg" alt="StreamBlur Pro" width="120" height="120">
+  <img src="public/tauri.svg" alt="StreamBlur Pro logo" width="120" height="120" style="max-width:100%;height:auto;">
   <h3>Alternativa Professionale a NVIDIA Broadcast per GPU AMD</h3>
   <p>Virtual camera con AI background blur in tempo reale</p>
-
   <p>
     <img src="https://img.shields.io/badge/version-5.0.0-blue" alt="Version">
     <img src="https://img.shields.io/badge/platform-Windows-lightgrey" alt="Platform">
@@ -13,24 +12,32 @@
   </p>
 </div>
 
----
+<hr />
 
-## 🚀 Panoramica
+<h2 align="center">🚀 Panoramica</h2>
 
-**StreamBlur Pro** è un'applicazione desktop che porta le funzionalità professionali di NVIDIA Broadcast agli utenti con GPU AMD. Utilizzando l'intelligenza artificiale di MediaPipe, offre blur dello sfondo in tempo reale per videocall, streaming e registrazioni.
+<div align="center" style="text-align:center">
+  <p><strong>StreamBlur Pro</strong> è un'applicazione desktop che porta le funzionalità professionali di NVIDIA Broadcast agli utenti con GPU AMD. Utilizzando l'intelligenza artificiale di MediaPipe, offre blur dello sfondo in tempo reale per videocall, streaming e registrazioni.</p>
+</div>
 
-### ✨ Caratteristiche Principali
+<h3 align="center">✨ Caratteristiche Principali</h3>
 
-- **🎯 AI Background Blur**: Rimozione intelligente dello sfondo senza green screen  
-- **🔧 AMD GPU Optimized**: Progettato specificamente per processori grafici AMD  
-- **📹 Virtual Camera**: Integrazione diretta con Discord, OBS, Teams, Zoom  
-- **⚡ Real-time Performance**: Monitoring CPU, memoria e FPS in tempo reale  
-- **🎛️ Controlli Avanzati**: Intensità blur, qualità AI, smoothing temporale  
-- **💾 Memory Smart**: Display dinamico memoria (MB/GB automatico)  
+<div align="center" style="text-align:center">
+  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
+    <li><strong>🎯 AI Background Blur</strong>: Rimozione intelligente dello sfondo senza green screen</li>
+    <li><strong>🔧 AMD GPU Optimized</strong>: Progettato specificamente per processori grafici AMD</li>
+    <li><strong>📹 Virtual Camera</strong>: Integrazione diretta con Discord, OBS, Teams, Zoom</li>
+    <li><strong>⚡ Real-time Performance</strong>: Monitoring CPU, memoria e FPS in tempo reale</li>
+    <li><strong>🎛️ Controlli Avanzati</strong>: Intensità blur, qualità AI, smoothing temporale</li>
+    <li><strong>💾 Memory Smart</strong>: Display dinamico memoria (MB/GB automatico)</li>
+  </ul>
+</div>
 
----
+<hr />
 
-## 🎯 Perché StreamBlur Pro?
+<h2 align="center">🎯 Perché StreamBlur Pro?</h2>
+
+<div align="center">
 
 | NVIDIA Broadcast              | StreamBlur Pro               |
 | ----------------------------- | ---------------------------- |
@@ -39,9 +46,11 @@
 | ❌ Limitato personalizzazione | ✅ **Controlli granulari**   |
 | ❌ Performance opache         | ✅ **Monitoring trasparente**|
 
----
+</div>
 
-## 📦 Tecnologie
+<hr />
+
+<h2 align="center">📦 Tecnologie</h2>
 
 <div align="center">
 
@@ -53,65 +62,76 @@
 
 </div>
 
----
+<hr />
 
-## 🛠️ Installazione
+<h2 align="center">🛠️ Installazione</h2>
 
-### 📋 Requisiti di Sistema
+<h3 align="center">📋 Requisiti di Sistema</h3>
 
-- **OS**: Windows 10/11 (64-bit)  
-- **GPU**: AMD Radeon (qualsiasi generazione recente)  
-- **RAM**: 4GB minimi, 8GB raccomandati  
-- **Storage**: 2GB spazio libero  
-- **Camera**: Webcam USB/integrata  
+<div align="center" style="text-align:center">
+  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
+    <li><strong>OS</strong>: Windows 10/11 (64-bit)</li>
+    <li><strong>GPU</strong>: AMD Radeon (qualsiasi generazione recente)</li>
+    <li><strong>RAM</strong>: 4GB minimi, 8GB raccomandati</li>
+    <li><strong>Storage</strong>: 2GB spazio libero</li>
+    <li><strong>Camera</strong>: Webcam USB/integrata</li>
+  </ul>
+</div>
 
-### 🚀 Installazione Rapida
+<h3 align="center">🚀 Installazione Rapida</h3>
 
-1. **Scarica l'Installer**  
-   📁 Vai a "Releases" → Scarica `StreamBlur-Pro-Setup.msi`  
+<div align="center" style="text-align:center">
+  <ol style="padding-left:0; list-style-position:inside; margin:0 auto;">
+    <li><strong>Scarica l'Installer</strong><br/>📁 Vai a "Releases" → Scarica <code>StreamBlur-Pro-Setup.msi</code></li>
+    <li><strong>Installa l'App</strong><br/>Esegui il file <code>.msi</code> come amministratore → segui la procedura guidata → l'app verrà installata in <code>Program Files</code></li>
+    <li><strong>Primo Avvio</strong><br/>Cerca "StreamBlur Pro" nel menu Start → autorizza l'accesso alla camera → l'AI si inizializzerà automaticamente</li>
+  </ol>
+</div>
 
-2. **Installa l'App**  
-   - Esegui il file `.msi` come amministratore  
-   - Segui la procedura guidata  
-   - L'app verrà installata in `Program Files`  
+<hr />
 
-3. **Primo Avvio**  
-   - Cerca "StreamBlur Pro" nel menu Start  
-   - Autorizza l'accesso alla camera  
-   - L'AI si inizializzerà automaticamente  
+<h2 align="center">🎮 Come Usare</h2>
 
----
+<h3 align="center">1) Avvio Applicazione</h3>
+<div align="center" style="text-align:center">
+  <p>Apri StreamBlur Pro dal menu Start — l'interfaccia si caricherà con la preview camera.</p>
+</div>
 
-## 🎮 Come Usare
+<h3 align="center">2) Configurazione Virtual Camera</h3>
+<div align="center" style="text-align:center">
+  <p>La virtual camera <strong>OBS Virtual Camera</strong> viene creata automaticamente.<br/>Selezionala in Discord/Teams/Zoom come sorgente video.</p>
+</div>
 
-### 1. **Avvio Applicazione**
-- Apri StreamBlur Pro dal menu Start
-- L'interfaccia si caricherà con la preview camera
+<h3 align="center">3) Controlli Disponibili</h3>
 
-### 2. **Configurazione Virtual Camera**
-- La virtual camera "OBS Virtual Camera" viene creata automaticamente
-- Selezionala in Discord/Teams/Zoom come sorgente video
-
-### 3. **Controlli Disponibili**
+<div align="center">
 
 | Controllo              | Funzione                                 |
 | ---------------------- | ---------------------------------------- |
 | **Show/Hide Preview**  | Mostra/nascondi anteprima camera         |
 | **Start/Stop**         | Avvia/ferma processamento AI             |
-| **Blur Intensity**     | Regola intensità sfocatura (0-100)       |
-| **AI Quality**         | Qualità elaborazione (Fast/Medium/High) |
+| **Blur Intensity**     | Regola intensità sfocatura (0–100)       |
+| **AI Quality**         | Qualità elaborazione (Fast/Medium/High)  |
 | **Edge Smoothing**     | Bordi più fluidi                         |
 | **Temporal Smoothing** | Riduce flickering tra frame              |
 
-### 4. **Monitoring Performance**
-- **FPS**: Frame al secondo elaborati  
-- **CPU**: Utilizzo processore normalizzato  
-- **Memory**: Uso RAM (smart MB/GB display)  
-- **Status**: Stato generale sistema  
+</div>
 
----
+<h3 align="center">4) Monitoring Performance</h3>
+<div align="center" style="text-align:center">
+  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
+    <li><strong>FPS</strong>: Frame al secondo elaborati</li>
+    <li><strong>CPU</strong>: Utilizzo processore normalizzato</li>
+    <li><strong>Memory</strong>: Uso RAM (smart MB/GB display)</li>
+    <li><strong>Status</strong>: Stato generale sistema</li>
+  </ul>
+</div>
 
-## 🏗️ Architettura
+<hr />
+
+<h2 align="center">🏗️ Architettura</h2>
+
+<div align="center">
 
 ```
 StreamBlur Pro
@@ -135,38 +155,54 @@ StreamBlur Pro
     ├── Performance metrics
     └── System integration
 ```
-
----
-
-## 🤝 Contribuire
-
-1. **Fork** il repository  
-2. **Crea** branch feature (`git checkout -b feature/AmazingFeature`)  
-3. **Commit** le modifiche (`git commit -m 'Add AmazingFeature'`)  
-4. **Push** al branch (`git push origin feature/AmazingFeature`)  
-5. **Apri** Pull Request  
-
-### 🐛 Segnala Bug
-- 📧 **Email**: christian@kodechris.dev  
-- 💼 **LinkedIn**: [Christian Koscielniak Pinto](https://www.linkedin.com/in/christian-koscielniak-pinto)  
-
----
-
-## 📜 Licenza
-Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
-
----
-
-<div align="center">
-  <p>Sviluppato da <a href="https://kodechris.dev/">Christian @ KodeChris</a></p>
-  <p>Fatto con ❤️ per la community AMD</p>
-  <p>⭐ Se ti piace il progetto, lascia una stella!</p>
 </div>
 
----
+<hr />
 
-## 📞 Supporto
-- 📧 **Email**: christian@kodechris.dev  
-- 🌐 **Portfolio**: [kodechris.dev](https://kodechris.dev/)  
-- 🐙 **GitHub Issues**: [Segnala problemi](https://github.com/ChrisKp1710/StreamBlur-Pro/issues)  
-- 📖 **Wiki**: [Documentazione Completa](https://github.com/ChrisKp1710/StreamBlur-Pro/wiki)  
+<h2 align="center">🤝 Contribuire</h2>
+
+<div align="center" style="text-align:center">
+  <ol style="padding-left:0; list-style-position:inside; margin:0 auto;">
+    <li><strong>Fork</strong> il repository</li>
+    <li><strong>Crea</strong> branch feature (<code>git checkout -b feature/AmazingFeature</code>)</li>
+    <li><strong>Commit</strong> le modifiche (<code>git commit -m 'Add AmazingFeature'</code>)</li>
+    <li><strong>Push</strong> al branch (<code>git push origin feature/AmazingFeature</code>)</li>
+    <li><strong>Apri</strong> Pull Request</li>
+  </ol>
+</div>
+
+<h3 align="center">🐛 Segnala Bug</h3>
+
+<div align="center" style="text-align:center">
+  <p>📧 <strong>Email</strong>: <a href="mailto:christian@kodechris.dev">christian@kodechris.dev</a><br/>
+  💼 <strong>LinkedIn</strong>: <a href="https://www.linkedin.com/in/christian-koscielniak-pinto/">Christian Koscielniak Pinto</a></p>
+</div>
+
+<hr />
+
+<h2 align="center">📜 Licenza</h2>
+
+<div align="center" style="text-align:center">
+  <p>Distribuito sotto licenza MIT. Vedi <code>LICENSE</code> per maggiori informazioni.</p>
+</div>
+
+<hr />
+
+<div align="center">
+  <p>Sviluppato da <a href="https://kodechris.dev/">Christian @ KodeChris</a><br/>
+  Fatto con ❤️ per la community AMD<br/>
+  ⭐ Se ti piace il progetto, lascia una stella!</p>
+</div>
+
+<hr />
+
+<h2 align="center">📞 Supporto</h2>
+
+<div align="center" style="text-align:center">
+  <p>
+    📧 <strong>Email</strong>: <a href="mailto:christian@kodechris.dev">christian@kodechris.dev</a><br/>
+    🌐 <strong>Portfolio</strong>: <a href="https://kodechris.dev/">kodechris.dev</a><br/>
+    🐙 <strong>GitHub Issues</strong>: <a href="https://github.com/ChrisKp1710/StreamBlur-Pro/issues">Segnala problemi</a><br/>
+    📖 <strong>Wiki</strong>: <a href="https://github.com/ChrisKp1710/StreamBlur-Pro/wiki">Documentazione Completa</a>
+  </p>
+</div>
