@@ -1,208 +1,247 @@
-<h1 align="center">🎥 StreamBlur Pro</h1>
-
-<div align="center">
-  <img src="public/tauri.svg" alt="StreamBlur Pro logo" width="120" height="120" style="max-width:100%;height:auto;">
-  <h3>Alternativa Professionale a NVIDIA Broadcast per GPU AMD</h3>
-  <p>Virtual camera con AI background blur in tempo reale</p>
-  <p>
-    <img src="https://img.shields.io/badge/version-5.0.0-blue" alt="Version">
-    <img src="https://img.shields.io/badge/platform-Windows-lightgrey" alt="Platform">
-    <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
-    <img src="https://img.shields.io/badge/GPU-AMD%20Compatible-red" alt="GPU">
-  </p>
-</div>
-
-<hr />
-
-<h2 align="center">🚀 Panoramica</h2>
-
-<div align="center" style="text-align:center">
-  <p><strong>StreamBlur Pro</strong> è un'applicazione desktop che porta le funzionalità professionali di NVIDIA Broadcast agli utenti con GPU AMD. Utilizzando l'intelligenza artificiale di MediaPipe, offre blur dello sfondo in tempo reale per videocall, streaming e registrazioni.</p>
-</div>
-
-<h3 align="center">✨ Caratteristiche Principali</h3>
-
-<div align="center" style="text-align:center">
-  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
-    <li><strong>🎯 AI Background Blur</strong>: Rimozione intelligente dello sfondo senza green screen</li>
-    <li><strong>🔧 AMD GPU Optimized</strong>: Progettato specificamente per processori grafici AMD</li>
-    <li><strong>📹 Virtual Camera</strong>: Integrazione diretta con Discord, OBS, Teams, Zoom</li>
-    <li><strong>⚡ Real-time Performance</strong>: Monitoring CPU, memoria e FPS in tempo reale</li>
-    <li><strong>🎛️ Controlli Avanzati</strong>: Intensità blur, qualità AI, smoothing temporale</li>
-    <li><strong>💾 Memory Smart</strong>: Display dinamico memoria (MB/GB automatico)</li>
-  </ul>
-</div>
-
-<hr />
-
-<h2 align="center">🎯 Perché StreamBlur Pro?</h2>
-
 <div align="center">
 
-| NVIDIA Broadcast              | StreamBlur Pro               |
-| ----------------------------- | ---------------------------- |
-| ❌ Solo GPU NVIDIA            | ✅ **Supporto GPU AMD**      |
-| ❌ Closed source              | ✅ **Open source**           |
-| ❌ Limitato personalizzazione | ✅ **Controlli granulari**   |
-| ❌ Performance opache         | ✅ **Monitoring trasparente**|
+<img src="streamblur-pro/public/tauri.svg" alt="StreamBlur Pro" width="96" height="96">
+
+# StreamBlur Pro
+
+**AI background blur for AMD GPUs — the open-source NVIDIA Broadcast alternative**
+
+[![Version](https://img.shields.io/badge/version-1.0.0-6366f1?style=flat-square)](https://github.com/ChrisKp1710/StreamBlur-Pro/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?style=flat-square&logo=windows&logoColor=white)](https://github.com/ChrisKp1710/StreamBlur-Pro)
+[![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](LICENSE)
+[![AMD](https://img.shields.io/badge/GPU-AMD%20Optimized-ED1C24?style=flat-square&logo=amd&logoColor=white)](https://github.com/ChrisKp1710/StreamBlur-Pro)
+[![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri-24C8DB?style=flat-square&logo=tauri&logoColor=white)](https://tauri.app)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 
 </div>
 
-<hr />
-
-<h2 align="center">📦 Tecnologie</h2>
+---
 
 <div align="center">
-
-| Frontend                                                                          | Backend                                                                 | AI Engine                                                                          | Desktop                                                                    |
-| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)             | ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python) | ![MediaPipe](https://img.shields.io/badge/MediaPipe-AI-FF6B35)                     | ![Tauri](https://img.shields.io/badge/Tauri-1.5-24C8DB?logo=tauri)         |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript) | ![FastAPI](https://img.shields.io/badge/FastAPI-Bridge-009688)          | ![TensorFlow](https://img.shields.io/badge/TensorFlow-Lite-FF6F00?logo=tensorflow) | ![Rust](https://img.shields.io/badge/Rust-Native-000000?logo=rust)         |
-| ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)   | ![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8) |                                                                                    | ![Windows](https://img.shields.io/badge/Windows-10/11-0078D4?logo=windows) |
-
+  <img src="assets/preview.png" alt="StreamBlur Pro — App Screenshot" width="720" style="border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <br/>
+  <sub><i>StreamBlur Pro in action — real-time AI background blur on AMD hardware</i></sub>
 </div>
 
-<hr />
+---
 
-<h2 align="center">🛠️ Installazione</h2>
+## What is StreamBlur Pro?
 
-<h3 align="center">📋 Requisiti di Sistema</h3>
+StreamBlur Pro brings professional-grade AI background blur to AMD GPU users — no green screen, no NVIDIA required. It hooks directly into your webcam, runs MediaPipe AI segmentation, and outputs a blurred background stream through OBS Virtual Camera, making it instantly available in **Discord, Teams, Zoom, and OBS**.
 
-<div align="center" style="text-align:center">
-  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
-    <li><strong>OS</strong>: Windows 10/11 (64-bit)</li>
-    <li><strong>GPU</strong>: AMD Radeon (qualsiasi generazione recente)</li>
-    <li><strong>RAM</strong>: 4GB minimi, 8GB raccomandati</li>
-    <li><strong>Storage</strong>: 2GB spazio libero</li>
-    <li><strong>Camera</strong>: Webcam USB/integrata</li>
-  </ul>
-</div>
+> Built on AMD Ryzen 9 5900X + RX 7900 XTX. Runs great on any modern AMD system.
 
-<h3 align="center">🚀 Installazione Rapida</h3>
+---
 
-<div align="center" style="text-align:center">
-  <ol style="padding-left:0; list-style-position:inside; margin:0 auto;">
-    <li><strong>Scarica l'Installer</strong><br/>📁 Vai a "Releases" → Scarica <code>StreamBlur-Pro-Setup.msi</code></li>
-    <li><strong>Installa l'App</strong><br/>Esegui il file <code>.msi</code> come amministratore → segui la procedura guidata → l'app verrà installata in <code>Program Files</code></li>
-    <li><strong>Primo Avvio</strong><br/>Cerca "StreamBlur Pro" nel menu Start → autorizza l'accesso alla camera → l'AI si inizializzerà automaticamente</li>
-  </ol>
-</div>
+## Features
 
-<hr />
+| | Feature | Description |
+|---|---|---|
+| 🤖 | **AI Segmentation** | MediaPipe-powered person detection — no green screen needed |
+| 🎥 | **Virtual Camera Output** | Works natively with Discord, Teams, Zoom, OBS, and any app that supports webcam input |
+| 🎛️ | **Adjustable Blur** | Intensity slider from subtle to cinematic (1–25 levels with cascade algorithm) |
+| ⚡ | **Three Quality Modes** | Low (256×144, 30fps+), Medium (384×216), High (512×288 accurate model) |
+| 🧊 | **Edge Smoothing** | Morphological + Gaussian mask refinement for clean person outlines |
+| 🎞️ | **Temporal Smoothing** | Frame-averaged mask to eliminate flickering between frames |
+| 📊 | **Performance Monitor** | Real-time FPS, CPU %, and RAM display inside the app |
+| 🔄 | **Hot Reload Settings** | Change blur intensity and AI quality live — no restart needed |
 
-<h2 align="center">🎮 Come Usare</h2>
+---
 
-<h3 align="center">1) Avvio Applicazione</h3>
-<div align="center" style="text-align:center">
-  <p>Apri StreamBlur Pro dal menu Start — l'interfaccia si caricherà con la preview camera.</p>
-</div>
+## StreamBlur Pro vs NVIDIA Broadcast
 
-<h3 align="center">2) Configurazione Virtual Camera</h3>
-<div align="center" style="text-align:center">
-  <p>La virtual camera <strong>OBS Virtual Camera</strong> viene creata automaticamente.<br/>Selezionala in Discord/Teams/Zoom come sorgente video.</p>
-</div>
+| | NVIDIA Broadcast | StreamBlur Pro |
+|---|---|---|
+| **GPU Support** | NVIDIA only | ✅ AMD (any modern GPU) |
+| **Source Code** | Closed source | ✅ Fully open source |
+| **AI Quality Control** | Fixed | ✅ Low / Medium / High |
+| **Performance Visibility** | None | ✅ FPS + CPU + RAM monitor |
+| **Virtual Camera** | Proprietary | ✅ OBS Virtual Camera |
+| **Customization** | Limited | ✅ Full control |
+| **Cost** | Free (NVIDIA required) | ✅ Free, no hardware lock |
 
-<h3 align="center">3) Controlli Disponibili</h3>
+---
+
+## Tech Stack
 
 <div align="center">
 
-| Controllo              | Funzione                                 |
-| ---------------------- | ---------------------------------------- |
-| **Show/Hide Preview**  | Mostra/nascondi anteprima camera         |
-| **Start/Stop**         | Avvia/ferma processamento AI             |
-| **Blur Intensity**     | Regola intensità sfocatura (0–100)       |
-| **AI Quality**         | Qualità elaborazione (Fast/Medium/High)  |
-| **Edge Smoothing**     | Bordi più fluidi                         |
-| **Temporal Smoothing** | Riduce flickering tra frame              |
+| Layer | Technology |
+|---|---|
+| **Desktop Shell** | [Tauri 1.5](https://tauri.app) (Rust) + WebView2 |
+| **Frontend** | React 19 + TypeScript + Tailwind CSS |
+| **AI Backend** | Python 3.11 + MediaPipe 0.10.14 |
+| **HTTP Bridge** | FastAPI + Uvicorn (port 8000) |
+| **Video Processing** | OpenCV 4.8+ |
+| **Virtual Camera** | pyvirtualcam + OBS Virtual Camera |
+| **System Metrics** | psutil |
 
 </div>
 
-<h3 align="center">4) Monitoring Performance</h3>
-<div align="center" style="text-align:center">
-  <ul style="list-style-position:inside; padding-left:0; margin:0 auto;">
-    <li><strong>FPS</strong>: Frame al secondo elaborati</li>
-    <li><strong>CPU</strong>: Utilizzo processore normalizzato</li>
-    <li><strong>Memory</strong>: Uso RAM (smart MB/GB display)</li>
-    <li><strong>Status</strong>: Stato generale sistema</li>
-  </ul>
-</div>
+---
 
-<hr />
+## Quick Start
 
-<h2 align="center">🏗️ Architettura</h2>
+### Prerequisites
 
-<div align="center">
+- Windows 10 / 11 (64-bit)
+- [Python 3.11](https://www.python.org/downloads/)
+- [Node.js 18+](https://nodejs.org)
+- [Rust + Cargo](https://rustup.rs)
+- [OBS Studio](https://obsproject.com) with Virtual Camera enabled
+- **Smart App Control disabled** — Windows Security → App & browser control → Off *(required for unsigned dev builds)*
+
+### 1 — Clone & install
+
+```bash
+git clone https://github.com/ChrisKp1710/StreamBlur-Pro.git
+cd StreamBlur-Pro
+```
+
+**Python backend:**
+```bash
+cd StreamBlur-Python-Core
+python -m venv streamblur_env
+streamblur_env\Scripts\pip install -r requirements.txt
+```
+
+**Frontend:**
+```bash
+cd ../streamblur-pro
+npm install
+```
+
+### 2 — Run in development
+
+```bash
+cd streamblur-pro
+npm run tauri dev
+```
+
+The Tauri app automatically launches the Python bridge on startup. If it doesn't, start it manually:
+
+```bash
+cd StreamBlur-Python-Core
+streamblur_env\Scripts\python.exe final_bridge_to_your_modules.py
+```
+
+### 3 — Use it
+
+1. Click **Start** in the app
+2. Open Discord / Teams / Zoom
+3. Select **"OBS Virtual Camera"** as your video source
+4. Done — your background is blurred in real time
+
+---
+
+## How It Works
 
 ```
-StreamBlur Pro
-├── 🖥️ Desktop App (Tauri + React)
-│   ├── Interfaccia utente moderna
-│   ├── Controlli real-time
-│   └── Performance monitoring
-│
-├── 🧠 AI Engine (Python + MediaPipe)
-│   ├── Background segmentation
-│   ├── Real-time processing
-│   └── GPU acceleration
-│
-├── 📹 Virtual Camera (OpenCV)
-│   ├── Video stream capture
-│   ├── Frame processing pipeline
-│   └── Output to virtual device
-│
-└── 🔗 Bridge Layer (FastAPI + Rust)
-    ├── Settings synchronization
-    ├── Performance metrics
-    └── System integration
+Webcam
+  │
+  ▼
+CameraManager          ← Threaded capture at 1280×720, buffer size 2
+  │
+  ▼
+AIProcessor            ← MediaPipe SelfieSegmentation (model 0 or 1)
+  │                       Resize frame to AI resolution (256–512px wide)
+  │                       → Edge smoothing (morphology + Gaussian)
+  │                       → Temporal smoothing (3-frame weighted average)
+  ▼
+EffectsProcessor       ← Cascade Gaussian blur on background only
+  │                       Light (1 pass) / Medium (2 pass) / Heavy (downsample + 3 pass)
+  ▼
+VirtualCameraManager   ← pyvirtualcam → OBS Virtual Camera → Discord/Teams/Zoom
+  │
+  ▼
+preview_frame (JPEG)   ← 640×360 downscaled, polled every 100ms by the React UI
 ```
-</div>
 
-<hr />
+**Communication flow:**
 
-<h2 align="center">🤝 Contribuire</h2>
+```
+React UI → invoke() → Rust (Tauri) → HTTP POST → FastAPI (Python :8000)
 
-<div align="center" style="text-align:center">
-  <ol style="padding-left:0; list-style-position:inside; margin:0 auto;">
-    <li><strong>Fork</strong> il repository</li>
-    <li><strong>Crea</strong> branch feature (<code>git checkout -b feature/AmazingFeature</code>)</li>
-    <li><strong>Commit</strong> le modifiche (<code>git commit -m 'Add AmazingFeature'</code>)</li>
-    <li><strong>Push</strong> al branch (<code>git push origin feature/AmazingFeature</code>)</li>
-    <li><strong>Apri</strong> Pull Request</li>
-  </ol>
-</div>
+Endpoints:
+  GET  /health          check all modules loaded
+  GET  /status          fps, cpu, ram, running state
+  POST /start           init camera + AI + virtual cam + start loop
+  POST /stop            stop loop + full cleanup (restart-safe)
+  POST /settings        live-update blur, quality, edge/temporal smoothing
+  GET  /preview/frame   single JPEG frame for UI preview polling
+```
 
-<h3 align="center">🐛 Segnala Bug</h3>
+---
 
-<div align="center" style="text-align:center">
-  <p>📧 <strong>Email</strong>: <a href="mailto:christian@kodechris.dev">christian@kodechris.dev</a><br/>
-  💼 <strong>LinkedIn</strong>: <a href="https://www.linkedin.com/in/christian-koscielniak-pinto/">Christian Koscielniak Pinto</a></p>
-</div>
+## Project Structure
 
-<hr />
+```
+StreamBlur-Pro/
+├── StreamBlur-Python-Core/
+│   ├── final_bridge_to_your_modules.py   ← FastAPI server + main processing loop
+│   ├── requirements.txt
+│   └── src/
+│       ├── core/
+│       │   ├── camera.py          webcam capture (threaded, queue-based)
+│       │   ├── ai_processor.py    MediaPipe segmentation + smoothing
+│       │   ├── effects.py         cascade Gaussian blur
+│       │   └── virtual_camera.py  OBS Virtual Camera output
+│       └── utils/
+│           ├── config.py          JSON config (~/.streamblur_pro/)
+│           └── performance.py     FPS / CPU / RAM metrics
+│
+└── streamblur-pro/
+    ├── src-tauri/src/main.rs      Rust: spawn Python, expose Tauri commands
+    └── src/
+        ├── App.tsx                root — status polling every 1s
+        └── components/
+            ├── Header.tsx         status badge + FPS
+            ├── CameraPreview.tsx  live preview via JPEG polling
+            ├── MainControl.tsx    Start / Stop button
+            ├── Performance.tsx    FPS / CPU / Memory cards
+            ├── BlurControl.tsx    intensity slider
+            └── AISettings.tsx     quality selector + toggles
+```
 
-<h2 align="center">📜 Licenza</h2>
+---
 
-<div align="center" style="text-align:center">
-  <p>Distribuito sotto licenza MIT. Vedi <code>LICENSE</code> per maggiori informazioni.</p>
-</div>
+## Contributing
 
-<hr />
+Contributions are welcome. Here's how:
+
+1. Fork the repository
+2. Create your branch: `git checkout -b feature/my-feature`
+3. Commit with a clear message: `git commit -m "Add my feature"`
+4. Push: `git push origin feature/my-feature`
+5. Open a Pull Request
+
+**Open issues / roadmap:**
+
+- [ ] Code signing for distribution (eliminates Smart App Control prompt)
+- [ ] Installer (`.msi`) via `npm run tauri build`
+- [ ] Guard against multiple Start clicks (port 8000 conflict)
+- [ ] Webcam selector dropdown
+- [ ] Virtual background images (beyond blur)
+- [ ] GPU acceleration via PyOpenCL (AMD RX series)
+
+Report bugs on [GitHub Issues](https://github.com/ChrisKp1710/StreamBlur-Pro/issues).
+
+---
+
+## License
+
+Distributed under the **MIT License** — see [`LICENSE`](LICENSE) for details.
+
+---
 
 <div align="center">
-  <p>Sviluppato da <a href="https://kodechris.dev/">Christian @ KodeChris</a><br/>
-  Fatto con ❤️ per la community AMD<br/>
-  ⭐ Se ti piace il progetto, lascia una stella!</p>
-</div>
 
-<hr />
+Made with ❤️ by [Christian @ KodeChris](https://kodechris.dev) for the AMD community
 
-<h2 align="center">📞 Supporto</h2>
+[![GitHub stars](https://img.shields.io/github/stars/ChrisKp1710/StreamBlur-Pro?style=social)](https://github.com/ChrisKp1710/StreamBlur-Pro)
+&nbsp;
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Christian%20Koscielniak%20Pinto-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/christian-koscielniak-pinto/)
+&nbsp;
+[![Portfolio](https://img.shields.io/badge/Portfolio-kodechris.dev-6366f1?style=flat-square)](https://kodechris.dev)
 
-<div align="center" style="text-align:center">
-  <p>
-    📧 <strong>Email</strong>: <a href="mailto:christian@kodechris.dev">christian@kodechris.dev</a><br/>
-    🌐 <strong>Portfolio</strong>: <a href="https://kodechris.dev/">kodechris.dev</a><br/>
-    🐙 <strong>GitHub Issues</strong>: <a href="https://github.com/ChrisKp1710/StreamBlur-Pro/issues">Segnala problemi</a><br/>
-    📖 <strong>Wiki</strong>: <a href="https://github.com/ChrisKp1710/StreamBlur-Pro/wiki">Documentazione Completa</a>
-  </p>
 </div>
