@@ -191,6 +191,21 @@ class AIProcessor:
         
         return mask
     
+    def update_quality(self, quality: str):
+        """Aggiorna qualità AI: risoluzione e modello in base al livello scelto"""
+        quality_map = {
+            'low':    (0, 256, 144),   # Veloce: risoluzione ridotta + modello leggero
+            'medium': (0, 384, 216),   # Bilanciato: risoluzione media + modello leggero
+            'high':   (1, 512, 288),   # Accurato: risoluzione piena + modello preciso
+        }
+        model_sel, w, h = quality_map.get(quality, quality_map['medium'])
+
+        self.ai_width = w
+        self.ai_height = h
+        performance_mode = (model_sel == 0)
+        self.switch_model(performance_mode)
+        print(f"✅ AI quality '{quality}': {w}x{h}, model={'fast' if model_sel == 0 else 'accurate'}")
+
     def set_edge_smoothing(self, enabled: bool):
         """Abilita/disabilita edge smoothing"""
         if self.edge_smoothing != enabled:

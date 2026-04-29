@@ -69,27 +69,26 @@ preview_lock = threading.Lock()
 def main_processing_loop():
     """Loop principale che usa i TUOI moduli per processare i frame"""
     global main_loop_running, current_real_fps, last_preview_frame
-    
+
     logger.info("🔄 Avviato loop principale con i TUOI moduli originali!")
-    
-    # 📊 Variabili per calcolo FPS reali (SENZA spam log)
+
     frame_count = 0
     start_time = time.time()
     last_fps_update = time.time()
-    
+    TARGET_FPS = 30
+    target_interval = 1.0 / TARGET_FPS
+
     while main_loop_running:
+        loop_start = time.time()
         try:
-            # 1. Cattura frame usando il TUO CameraManager
             frame = camera_manager.get_frame()
             if frame is None:
-                time.sleep(0.01)  # Aspetta un po' se non ci sono frame
+                time.sleep(0.005)
                 continue
-            
-            # 📊 Conta frame processati per FPS reali
+
             frame_count += 1
             current_time = time.time()
-            
-            # Calcola FPS reali ogni secondo (SILENZIOSO)
+
             if current_time - last_fps_update >= 1.0:
                 elapsed = current_time - start_time
                 if elapsed > 0:
@@ -97,37 +96,35 @@ def main_processing_loop():
                 frame_count = 0
                 start_time = current_time
                 last_fps_update = current_time
-            
-            # Ottieni le dimensioni del frame
+
             height, width = frame.shape[:2]
             output_size = (width, height)
-            
-            # 2. Processa con il TUO AIProcessor per la segmentazione
+
             person_mask = ai_processor.process_frame(frame, output_size)
-            
-            # 3. Applica blur solo allo sfondo usando il TUO EffectsProcessor  
+
             if person_mask is not None:
                 blurred_frame = effects_processor.apply_background_blur(frame, person_mask)
             else:
-                # Se non c'è mask, invia il frame originale
                 blurred_frame = frame
-            
-            # 4. Invia alla virtual camera usando il TUO VirtualCameraManager
+
             virtual_camera_manager.send_frame(blurred_frame)
 
-            # Salva frame per il preview MJPEG nell'app
             with preview_lock:
                 last_preview_frame = blurred_frame.copy()
-            
-            # 5. Aggiorna statistiche con il TUO PerformanceMonitor
+
             if hasattr(performance_monitor, 'frame_processed'):
                 performance_monitor.frame_processed()
-            
+
         except Exception as e:
             logger.error(f"❌ Errore nel loop principale: {e}")
-            time.sleep(0.1)  # Aspetta un po' in caso di errore
-    
-    # Reset FPS quando il loop si ferma
+            time.sleep(0.1)
+
+        # Cap a TARGET_FPS: dormi il tempo rimanente dell'intervallo
+        elapsed = time.time() - loop_start
+        sleep_time = target_interval - elapsed
+        if sleep_time > 0.001:
+            time.sleep(sleep_time)
+
     current_real_fps = 0.0
     logger.info("⏹️ Loop principale fermato")
 
@@ -354,31 +351,18 @@ async def update_settings(settings: dict):
                 except Exception as e:
                     logger.error(f"❌ Errore aggiornamento AI {key}: {e}")
             
-            # 🎛️ LEGACY: Supporto per quality/smoothing (mappatura vecchia)
+            # Quality level: low/medium/high — aggiorna modello AI e risoluzione
             if key == "quality" and ai_processor:
-                # Mappa quality a performance mode con logging amplificato
-                # 🔧 FISSO: low=VELOCE, medium/high=ACCURATO
-                performance_mode = value == "low"  # low = performance mode = più FPS
                 try:
-                    # Solo se AI è inizializzato
-                    if hasattr(ai_processor, 'switch_model') and hasattr(ai_processor, 'segmentation') and ai_processor.segmentation:
-                        ai_processor.switch_model(performance_mode)
-                        quality_desc = "🚀 VELOCE (meno accurato)" if performance_mode else "🎯 ACCURATO (più lento)"
-                        logger.info(f"🤖 Quality→Performance mode applicato: {performance_mode} → {quality_desc}")
+                    if hasattr(ai_processor, 'update_quality') and hasattr(ai_processor, 'segmentation') and ai_processor.segmentation:
+                        ai_processor.update_quality(str(value))
+                        logger.info(f"🤖 AI quality aggiornata: {value}")
                     else:
-                        logger.info(f"🤖 Quality→Performance mode salvato: {performance_mode}")
+                        # Fallback se AI non ancora inizializzato
+                        performance_mode = value == "low"
+                        logger.info(f"🤖 Quality salvata per dopo l'inizializzazione: {value}")
                 except Exception as e:
-                    logger.error(f"❌ Errore quality mapping: {e}")
-                    
-            if key == "smoothing" and ai_processor:
-                # Mappa smoothing a temporal smoothing 
-                temporal_enabled = float(value) > 0.5
-                try:
-                    if hasattr(ai_processor, 'set_temporal_smoothing'):
-                        ai_processor.set_temporal_smoothing(temporal_enabled)
-                        logger.info(f"⏱️ Smoothing→Temporal: {temporal_enabled}")
-                except Exception as e:
-                    logger.error(f"❌ Errore smoothing mapping: {e}")
+                    logger.error(f"❌ Errore quality update: {e}")
         
         return {"status": "updated", "settings": settings, "propagated": True}
         
@@ -420,7 +404,11 @@ async def preview_frame():
     if frame is None:
         raise HTTPException(status_code=503, detail="Nessun frame disponibile")
 
-    _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+    # Downscale a metà risoluzione per il preview (640x360 invece di 1280x720)
+    h, w = frame.shape[:2]
+    preview_small = cv2.resize(frame, (w // 2, h // 2), interpolation=cv2.INTER_LINEAR)
+
+    _, buffer = cv2.imencode('.jpg', preview_small, [cv2.IMWRITE_JPEG_QUALITY, 75])
     return Response(content=buffer.tobytes(), media_type="image/jpeg")
 
 @app.get("/status")
@@ -434,8 +422,9 @@ async def get_status():
         
         # Metriche sistema (opzionali)
         cpu_usage = 0.0
-        memory_usage_gb = 0.0  # 📊 Convertiamo in GB per maggiore leggibilità
-        
+        memory_usage_gb = 0.0
+        memory_usage_mb = 0.0
+
         try:
             import psutil
             import os

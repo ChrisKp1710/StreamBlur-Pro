@@ -92,8 +92,8 @@ class EffectsProcessor:
             if final_kernel % 2 == 0:
                 final_kernel += 1
             blurred_bg = cv2.GaussianBlur(blurred_bg, (final_kernel, final_kernel), 0)
-        
-                # Applica mask con blur soft per transizioni smooth
+
+        # Applica mask con blur soft per transizioni smooth
         mask_3ch = np.stack([mask] * 3, axis=-1)
         mask_blurred = cv2.GaussianBlur(mask_3ch, (5, 5), 1.5)
         
@@ -115,19 +115,11 @@ class EffectsProcessor:
             if kernel_size_bokeh % 2 == 0:
                 kernel_size_bokeh += 1
             blurred_bg = cv2.medianBlur(blurred_bg, kernel_size_bokeh)
-        
+
         # Mask a 3 canali con blur per transizioni smooth
         mask_3ch = np.stack([mask] * 3, axis=-1)
         mask_blurred = cv2.GaussianBlur(mask_3ch, (3, 3), 1)
-        
-        # Componi risultato finale
-        result = frame * mask_blurred + blurred_bg * (1 - mask_blurred)
-        return result.astype(np.uint8)
-        
-        # Mask a 3 canali con blur per transizioni smooth
-        mask_3ch = np.stack([mask_normalized] * 3, axis=-1)
-        mask_blurred = cv2.GaussianBlur(mask_3ch, (3, 3), 1)
-        
+
         # Componi risultato finale
         result = frame * mask_blurred + blurred_bg * (1 - mask_blurred)
         return result.astype(np.uint8)

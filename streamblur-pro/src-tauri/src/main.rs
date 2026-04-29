@@ -220,16 +220,17 @@ async fn update_blur_settings(intensity: u8, enabled: bool) -> Result<String, St
 }
 
 #[tauri::command]
-async fn update_ai_settings(performance_mode: bool, edge_smoothing: bool, temporal_smoothing: bool) -> Result<String, String> {
-    println!("🤖 Aggiornando AI: perf={}, edge={}, temporal={}", performance_mode, edge_smoothing, temporal_smoothing);
-    
-    // Chiamata HTTP al backend Python
+async fn update_ai_settings(performance_mode: bool, edge_smoothing: bool, temporal_smoothing: bool, quality: String) -> Result<String, String> {
+    println!("🤖 Aggiornando AI: quality={}, edge={}, temporal={}", quality, edge_smoothing, temporal_smoothing);
+
     let client = reqwest::Client::new();
+    // Usa il quality value reale dalla UI; performance_mode legacy viene ignorato (gestito dal quality selector)
     let payload = serde_json::json!({
-        "quality": if performance_mode { "high" } else { "medium" },
-        "smoothing": if edge_smoothing { 0.8 } else { 0.3 }
+        "quality": quality,
+        "edgeSmoothing": edge_smoothing,
+        "temporalSmoothing": temporal_smoothing
     });
-    
+
     match client
         .post("http://127.0.0.1:8000/settings")
         .json(&payload)
@@ -238,7 +239,7 @@ async fn update_ai_settings(performance_mode: bool, edge_smoothing: bool, tempor
     {
         Ok(response) => {
             if response.status().is_success() {
-                Ok("Impostazioni AI aggiornate".to_string())
+                Ok(format!("Impostazioni AI aggiornate - quality: {}", quality))
             } else {
                 Err(format!("Errore HTTP: {}", response.status()))
             }
