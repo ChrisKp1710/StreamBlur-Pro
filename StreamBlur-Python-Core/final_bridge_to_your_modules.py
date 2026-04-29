@@ -40,7 +40,16 @@ else:
     sys.exit(1)
 
 # App FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="Bridge ai TUOI moduli originali con package support")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 # Variabili globali per i TUOI oggetti
 camera_manager = None
