@@ -27,25 +27,24 @@ export function CameraPreview({ previewEnabled, setPreviewEnabled, isActive, blu
           {previewEnabled ? 'Hide' : 'Show'}
         </button>
       </div>
-      
-      <div className="flex-1 relative">
-        {previewEnabled ? (
-          <div className="absolute inset-0 flex items-center justify-center">
+
+      <div className="flex-1 relative overflow-hidden">
+        {previewEnabled && isActive ? (
+          // Stream MJPEG reale dal backend Python — mostra il frame con blur applicato
+          <img
+            key="live-preview"
+            src="http://127.0.0.1:8000/preview"
+            alt="Live camera feed"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : previewEnabled && !isActive ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Camera className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Camera className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">Live Camera Feed</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                Blur: {blurIntensity}%
-              </p>
-              
-              {isActive && (
-                <div className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-xs font-medium">
-                  <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse mr-1.5"></div>
-                  LIVE
-                </div>
-              )}
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Premi Start per avviare</p>
+              <p className="text-xs text-gray-400 mt-1">Il preview apparirà qui</p>
             </div>
           </div>
         ) : (
@@ -55,7 +54,7 @@ export function CameraPreview({ previewEnabled, setPreviewEnabled, isActive, blu
                 <EyeOff className="w-8 h-8 text-blue-500 dark:text-blue-400" />
               </div>
               <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Preview Disabled</p>
-              <p className="text-xs text-blue-500 dark:text-blue-400 mt-1">Click "Show" to enable camera preview</p>
+              <p className="text-xs text-blue-500 dark:text-blue-400 mt-1">Clicca "Show" per attivare</p>
             </div>
           </div>
         )}

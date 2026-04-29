@@ -53,11 +53,13 @@ config = None
 # Variabili per il controllo del loop e statistiche
 main_loop_running = False
 main_loop_thread = None
-current_real_fps = 0.0  # 📊 FPS reali per il card Performance (NO spam log)
+current_real_fps = 0.0
+last_preview_frame = None  # Frame blurrato per il preview MJPEG nell'app
+preview_lock = threading.Lock()
 
 def main_processing_loop():
     """Loop principale che usa i TUOI moduli per processare i frame"""
-    global main_loop_running, current_real_fps
+    global main_loop_running, current_real_fps, last_preview_frame
     
     logger.info("🔄 Avviato loop principale con i TUOI moduli originali!")
     
@@ -103,6 +105,10 @@ def main_processing_loop():
             
             # 4. Invia alla virtual camera usando il TUO VirtualCameraManager
             virtual_camera_manager.send_frame(blurred_frame)
+
+            # Salva frame per il preview MJPEG nell'app
+            with preview_lock:
+                last_preview_frame = blurred_frame.copy()
             
             # 5. Aggiorna statistiche con il TUO PerformanceMonitor
             if hasattr(performance_monitor, 'frame_processed'):
@@ -394,6 +400,30 @@ async def update_ai_settings(settings: dict):
     except Exception as e:
         logger.error(f"❌ Errore aggiornamento AI settings: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/preview")
+async def preview_stream():
+    """Stream MJPEG del frame blurrato per il preview nell'app"""
+    from fastapi.responses import StreamingResponse
+    import asyncio
+
+    async def generate():
+        while True:
+            with preview_lock:
+                frame = last_preview_frame.copy() if last_preview_frame is not None else None
+
+            if frame is not None:
+                _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 65])
+                jpg = buffer.tobytes()
+                yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
+            else:
+                # Nessun frame disponibile, aspetta
+                await asyncio.sleep(0.05)
+                continue
+
+            await asyncio.sleep(0.033)  # ~30 FPS
+
+    return StreamingResponse(generate(), media_type="multipart/x-mixed-replace;boundary=frame")
 
 @app.get("/status")
 async def get_status():
