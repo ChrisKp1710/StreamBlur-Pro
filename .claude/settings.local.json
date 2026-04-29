@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/chris/Documents/code/StreamBlur-Pro/StreamBlur-Python-Core/**)",
+      "Bash(python -m venv streamblur_env)",
+      "Bash(npm install *)",
+      "Bash(streamblur_env\\\\Scripts\\\\pip install *)"
+    ]
+  }
+}
