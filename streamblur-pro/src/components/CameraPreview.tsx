@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Camera, Monitor, Eye, EyeOff } from 'lucide-react';
 
 interface CameraPreviewProps {
@@ -8,6 +9,43 @@ interface CameraPreviewProps {
 }
 
 export function CameraPreview({ previewEnabled, setPreviewEnabled, isActive, blurIntensity }: CameraPreviewProps) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (previewEnabled && isActive) {
+      // Polling frame ogni 100ms (~10 FPS nel preview, leggero sulla CPU)
+      intervalRef.current = setInterval(async () => {
+        try {
+          const response = await fetch('http://127.0.0.1:8000/preview/frame', { cache: 'no-store' });
+          if (response.ok) {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            if (imgRef.current) {
+              const old = imgRef.current.src;
+              imgRef.current.src = url;
+              // Libera il vecchio blob URL per non sprecare memoria
+              if (old.startsWith('blob:')) URL.revokeObjectURL(old);
+            }
+          }
+        } catch (_) {
+          // backend non raggiungibile, ignora
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      // Libera eventuale blob URL rimasto
+      if (imgRef.current?.src.startsWith('blob:')) {
+        URL.revokeObjectURL(imgRef.current.src);
+      }
+    };
+  }, [previewEnabled, isActive]);
+
   return (
     <div className="col-span-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col">
       <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
@@ -30,11 +68,10 @@ export function CameraPreview({ previewEnabled, setPreviewEnabled, isActive, blu
 
       <div className="flex-1 relative overflow-hidden">
         {previewEnabled && isActive ? (
-          // Stream MJPEG reale dal backend Python — mostra il frame con blur applicato
+          // Frame reale via polling — img sempre presente, aggiornata da useEffect
           <img
-            key="live-preview"
-            src="http://127.0.0.1:8000/preview"
-            alt="Live camera feed"
+            ref={imgRef}
+            alt="Camera preview"
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : previewEnabled && !isActive ? (

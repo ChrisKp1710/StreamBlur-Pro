@@ -401,29 +401,18 @@ async def update_ai_settings(settings: dict):
         logger.error(f"❌ Errore aggiornamento AI settings: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/preview")
-async def preview_stream():
-    """Stream MJPEG del frame blurrato per il preview nell'app"""
-    from fastapi.responses import StreamingResponse
-    import asyncio
+@app.get("/preview/frame")
+async def preview_frame():
+    """Restituisce un singolo frame JPEG per il polling dal frontend"""
+    from fastapi.responses import Response
+    with preview_lock:
+        frame = last_preview_frame.copy() if last_preview_frame is not None else None
 
-    async def generate():
-        while True:
-            with preview_lock:
-                frame = last_preview_frame.copy() if last_preview_frame is not None else None
+    if frame is None:
+        raise HTTPException(status_code=503, detail="Nessun frame disponibile")
 
-            if frame is not None:
-                _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 65])
-                jpg = buffer.tobytes()
-                yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
-            else:
-                # Nessun frame disponibile, aspetta
-                await asyncio.sleep(0.05)
-                continue
-
-            await asyncio.sleep(0.033)  # ~30 FPS
-
-    return StreamingResponse(generate(), media_type="multipart/x-mixed-replace;boundary=frame")
+    _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+    return Response(content=buffer.tobytes(), media_type="image/jpeg")
 
 @app.get("/status")
 async def get_status():
