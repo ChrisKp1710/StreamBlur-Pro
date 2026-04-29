@@ -44,14 +44,16 @@ fn greet(name: &str) -> String {
 #[tauri::command]
 async fn start_streamblur_engine(state: State<'_, AppState>) -> Result<String, String> {
     // Configura path per il BRIDGE FINALE con package support
-    let python_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_env\Scripts\python.exe";
-    let script_path = r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core\final_bridge_to_your_modules.py";
-    
+    let python_path = r"c:\Users\chris\Documents\code\StreamBlur-Pro\StreamBlur-Python-Core\streamblur_env\Scripts\python.exe";
+    let script_path = r"c:\Users\chris\Documents\code\StreamBlur-Pro\StreamBlur-Python-Core\final_bridge_to_your_modules.py";
+
     println!("🚀 Avviando BRIDGE FINALE con package support...");
-    
+
     match Command::new(python_path)
         .arg(script_path)
-        .current_dir(r"c:\Users\chris\Documents\StreamBlur-Pro\StreamBlur-Python-Core")
+        .current_dir(r"c:\Users\chris\Documents\code\StreamBlur-Pro\StreamBlur-Python-Core")
+        .env("PYTHONIOENCODING", "utf-8")
+        .env("PYTHONUTF8", "1")
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()

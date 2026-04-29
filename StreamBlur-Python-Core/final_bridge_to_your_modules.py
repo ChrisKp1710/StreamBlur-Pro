@@ -5,7 +5,14 @@ Questo bridge importa i TUOI moduli originali rispettando la struttura dei packa
 """
 
 import sys
+import io
 import os
+
+# Forza UTF-8 su Windows per supportare emoji nei log
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 from pathlib import Path
 import uvicorn
 from fastapi import FastAPI, HTTPException

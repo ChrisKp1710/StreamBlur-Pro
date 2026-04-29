@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Vite Frontend (React)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 1420
+    },
+    {
+      "name": "Python Bridge (FastAPI backend)",
+      "runtimeExecutable": "C:\\Users\\chris\\Documents\\code\\StreamBlur-Pro\\StreamBlur-Python-Core\\streamblur_env\\Scripts\\python.exe",
+      "runtimeArgs": ["C:\\Users\\chris\\Documents\\code\\StreamBlur-Pro\\StreamBlur-Python-Core\\final_bridge_to_your_modules.py"],
+      "port": 8000
+    },
+    {
+      "name": "Tauri Dev (full app)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "tauri", "dev"],
+      "port": 1420
+    }
+  ]
+}

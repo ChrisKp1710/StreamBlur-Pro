@@ -1,6 +1,6 @@
 # Core Computer Vision e AI
 opencv-python>=4.8.0
-mediapipe>=0.10.0
+mediapipe==0.10.14
 numpy>=1.24.0
 
 # Image Processing
@@ -8,6 +8,10 @@ pillow>=10.0.0
 
 # Virtual Camera
 pyvirtualcam>=0.10.0
+
+# FastAPI server (bridge)
+fastapi>=0.100.0
+uvicorn>=0.23.0
 
 # GPU Acceleration (Opzionale)
 pyopencl>=2023.1.0
